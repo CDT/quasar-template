@@ -1,6 +1,10 @@
 var oracledb = require('oracledb')
 const {ORACLE_URI, ORACLE_USER, ORACLE_PASSWORD} = require('./config')
-const log4js = require('log4js'); logger = log4js.getLogger(); fileLogger = log4js.getLogger('file')
+const log4js = require('log4js')
+
+// 日志
+logger = log4js.getLogger()
+fileLogger = log4js.getLogger('file')
 
 // 初始化Oracle
 exports.initOracle = () => {

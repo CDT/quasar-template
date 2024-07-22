@@ -3,8 +3,8 @@ var express = require('express'),
   routes = require('./api/routes'),
   defaultPort = 3000
 
-// 初始化数据库
-require('./database').initOracle()
+// 初始化Oracle
+// require('./database').initOracle()
 
 // 创建后台服务器，初始化，配置路由
 let app = express()
