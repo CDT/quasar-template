@@ -3,10 +3,10 @@ const bodyParser = require('body-parser'),
   moment = require('moment'),
   cors = require('cors'),
   jwt = require('jsonwebtoken'),
-  { TOKEN_KEY } = require('../config'),
+  { TOKEN_KEY } = require('./config'),
   mailer = require('nodemailer'),
   log4js = require('log4js'),
-  logger = log4js.getLogger()
+  path = require('path')
 
 const printLog = (req, res, next) => {
   logger.info(`${formatTime(new Date())} 访问：${req.originalUrl}   方法：${ req.method }`)  
@@ -44,12 +44,34 @@ exports.init = (app) => {
 
 const initLoggers = () => {
   log4js.configure({
-    appenders: { out: { type: 'stdout' },
-                 file: { type: 'file', filename: 'log/application.log'} },
-    categories: { default: { appenders: ['out'], level: 'trace' },
-                  file: { appenders: ['out', 'file'], level: 'warn' } }
-  })
+    appenders: {
+      out: { type: 'stdout' },
+      debug: {
+        type: 'dateFile',
+        filename: path.join(__dirname, 'log/debug.log'),
+        pattern: 'yyyy-MM-dd',
+        numBackups: 10
+      },
+      error: {
+        type: 'dateFile',
+        filename: path.join(__dirname, '../log/error.log'),
+        pattern: 'yyyy-MM-dd',
+        numBackups: 10
+      },
+      errorFilter: {
+        type: 'logLevelFilter',
+        appender: 'error',
+        level: 'error'
+      }
+    },
+    categories: {
+      default: { appenders: ['out', 'debug', 'errorFilter'], level: "debug" }
+    }
+  });
 }
+const logger = log4js.getLogger()
+logger.level = 'debug'
+exports.logger = logger
 
 const formatTime = time => moment(time).format('YYYY年MM月DD日 HH:mm:ss')
 exports.formatTime = formatTime
@@ -98,4 +120,58 @@ exports.mail = (addrs, title, content) => {
       return resolve(msg)
     })
   })
+}
+
+
+// 调用外部API
+
+let base = 'http://192.168.17.223:8080/'
+let sqlURL = base + 'sql/query/'
+let visitURL = base + 'visits/'
+
+let smsURL = 'http://enscore.tjh.com:21004/ums/sms/transmission'
+
+
+// 直接传入SQL运行，获得数组格式的运行结果
+exports.runSql = sql => axios.get(sqlURL + '?sql=' + encodeURIComponent(sql)).then(resp => resp.data).catch(error => handleError(error, sql))
+
+exports.getVisit = (pid, vnum, source = '2') =>
+    axios.get(visitURL + 'search/byPidAndVNum?pid=' + pid + '&vnum=' + vnum + '&projection=simple')
+      .then(resp => resp.data._embedded.visits[0]).catch(error => handleError(error))
+
+exports.sms = (Phone, Message) => {
+    logger.info(Phone, Message)
+    return axios.post(smsURL, {
+        User:"YIDUYUN",
+        Password:"tongji123456",
+        Phone, Message,
+        Schedule: ""
+    })
+}
+
+let handleError = (error, extraMsg = '') => {
+    console.error(error.message)
+    console.error(extraMsg)
+    console.trace()
+}
+
+exports.startServer = function (app, port, is_multi_server) {
+  if (is_multi_server) {
+    const numCPUs = require('os').cpus().length
+    const cluster = require('cluster')
+    if (cluster.isMaster) {
+      for (let i = 0; i < numCPUs; i++) {
+        cluster.fork()
+      }
+      cluster.on('exit', function(worker, code, signal) {
+        logger.debug(`worker process ${worker.process.pid} died`)
+      })
+    } else {
+      app.listen(port)
+      logger.debug(`server (pid ${process.pid}) started on port ${port}`)
+    }
+  } else {
+    app.listen(port)
+    logger.debug(`server started on port ${port}`)
+  }
 }

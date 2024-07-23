@@ -1,7 +1,7 @@
 var express = require('express'), 
-  { init } = require('./utils/utils'),
+  { init, logger, startServer } = require('./utils'),
   routes = require('./api/routes'),
-  defaultPort = 3000
+  { MULTI_SERVER, PORT } = require('./config')
 
 // 初始化Oracle
 // require('./database').initOracle()
@@ -11,7 +11,5 @@ let app = express()
 init(app)
 routes(app)
 
-let port = process.argv[2] || defaultPort
-app.listen(port)
-
-console.log(`Server started on ${port}`)
+// 启动服务器
+startServer(app, PORT, MULTI_SERVER)

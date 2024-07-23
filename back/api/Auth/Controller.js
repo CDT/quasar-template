@@ -1,6 +1,6 @@
 'use strict'
 
-const { getParam, success, fail } = require('../../utils/utils'), md5 = require('md5'), jwt = require('jsonwebtoken')
+const { getParam, success, fail } = require('../../utils'), md5 = require('md5'), jwt = require('jsonwebtoken')
 const authModel = require('./Model'), { TOKEN_KEY, TOKEN_EXPIRATION_TIME } = require('../../config')
 
 // 登录

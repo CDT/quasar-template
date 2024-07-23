@@ -7,6 +7,10 @@ exports.ORACLE_PASSWORD = '86915998'
 exports.MAIL_ADDRESS = '779888925@qq.com'
 exports.MAIL_PASSWORD = '!qaz2wsx'
 
-// TOKEN
+// TOKEN:
 exports.TOKEN_KEY = 'TONGJIYIYUAN123'
 exports.TOKEN_EXPIRATION_TIME = '24h'
+
+// GENERAL:
+exports.MULTI_SERVER = true
+exports.PORT = 3001
