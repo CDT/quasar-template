@@ -1,115 +1,48 @@
 <template>
-  <q-page class="window-height window-width row justify-center items-center"
-    style="background: linear-gradient(#8274C5, #5A4A9F);">
+  <q-page class="window-height window-width row justify-center items-center" style="background: linear-gradient(#8274C5, #5A4A9F);">
     <div class="column q-pa-lg">
       <div class="row">
         <q-card square class="shadow-24" style="width:400px;height:540px;">
-          <!-- 标题 -->
           <q-card-section class="bg-deep-purple-7">
             <h4 class="text-h5 text-white q-my-md text-center">{{ title }}</h4>
           </q-card-section>
           <q-card-section>
-            <q-fab
-              color="primary"
-              @click="switchTypeForm"
-              icon="add"
-              class="absolute"
-              style="top: 0; right: 12px; transform: translateY(-50%);"
-            >
-              <q-tooltip>
-                新用户注册
-              </q-tooltip>
+            <q-fab color="primary" @click="switchTypeForm" icon="add" class="absolute" style="top: 0; right: 12px; transform: translateY(-50%);">
+              <q-tooltip>新用户注册</q-tooltip>
             </q-fab>
             <q-form class="q-px-sm q-pt-xl">
-              <q-input
-                ref="emailRef"
-                square
-                clearable
-                v-model="email"
-                type="email"
-                lazy-rules
-                :rules="[required, isEmail, short]"
-                label="邮箱"
-              >
+              <q-input ref="emailRef" square clearable v-model="email" type="email" lazy-rules :rules="[required, isEmail, short]" label="邮箱">
                 <template v-slot:prepend>
                   <q-icon name="email" />
                 </template>
               </q-input>
-              <q-input
-                ref="usernameRef"
-                v-if="register"
-                square
-                clearable
-                v-model="username"
-                lazy-rules
-                :rules="[required, short]"
-                type="text"
-                label="用户名"
-              >
+              <q-input ref="usernameRef" v-if="register" square clearable v-model="username" lazy-rules :rules="[required, short]" type="text" label="用户名">
                 <template v-slot:prepend>
                   <q-icon name="person" />
                 </template>
               </q-input>
-              <q-input
-                ref="passwordRef"
-                square
-                clearable
-                v-model="password"
-                :type="passwordFieldType"
-                lazy-rules
-                :rules="[required, short]"
-                label="密码"
-              >
+              <q-input ref="passwordRef" square clearable v-model="password" :type="passwordFieldType" lazy-rules :rules="[required, short]" label="密码">
                 <template v-slot:prepend>
                   <q-icon name="lock" />
                 </template>
                 <template v-slot:append>
-                  <q-icon
-                    :name="visibilityIcon"
-                    @click="switchVisibility"
-                    class="cursor-pointer"
-                  />
+                  <q-icon :name="visibilityIcon" @click="switchVisibility" class="cursor-pointer" />
                 </template>
               </q-input>
-              <q-input
-                ref="repasswordRef"
-                v-if="register"
-                square
-                clearable
-                v-model="repassword"
-                :type="passwordFieldType"
-                lazy-rules
-                :rules="[required, short, diffPassword]"
-                label="再次输入密码"
-              >
+              <q-input ref="repasswordRef" v-if="register" square clearable v-model="repassword" :type="passwordFieldType" lazy-rules :rules="[required, short, diffPassword]" label="再次输入密码">
                 <template v-slot:prepend>
                   <q-icon name="lock" />
                 </template>
                 <template v-slot:append>
-                  <q-icon
-                    :name="visibilityIcon"
-                    @click="switchVisibility"
-                    class="cursor-pointer"
-                  />
+                  <q-icon :name="visibilityIcon" @click="switchVisibility" class="cursor-pointer" />
                 </template>
               </q-input>
             </q-form>
           </q-card-section>
-
           <q-card-actions class="q-px-lg">
-            <q-btn
-              unelevated
-              size="lg"
-              color="secondary"
-              @click="submit"
-              class="full-width text-white"
-              :label="btnLabel"
-            />
+            <q-btn unelevated size="lg" color="secondary" @click="submit" class="full-width text-white" :label="btnLabel" />
           </q-card-actions>
-          <q-card-section
-            v-if="!register"
-            class="text-center q-pa-sm"
-          >
+          <q-card-section v-if="!register" class="text-center q-pa-sm">
             <p class="text-grey-6">忘记密码？</p>
           </q-card-section>
         </q-card>
@@ -120,15 +53,18 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
+import { useRouter } from 'vue-router'
+import { useQuasar } from 'quasar'
+import { useNotifications } from 'src/composables/useNotifications'
 
-const email = ref(null)
-const username = ref(null)
-const password = ref(null)
-const repassword = ref(null)
-const register = ref(false)
+const email = ref<string>('')
+const username = ref<string>('')
+const password = ref<string>('')
+const repassword = ref<string>('')
+const register = ref<boolean>(false)
 const passwordFieldType = ref<'text' | 'password'>('password')
-const visibility = ref(false)
-const visibilityIcon = ref('visibility')
+const visibility = ref<boolean>(false)
+const visibilityIcon = ref<string>('visibility')
 
 const emailRef = ref<any>(null)
 const usernameRef = ref<any>(null)
@@ -137,6 +73,11 @@ const repasswordRef = ref<any>(null)
 
 const title = computed(() => (register.value ? '注册' : '登录') + process.env.PROJECT_NAME)
 const btnLabel = computed(() => register.value ? '注册' : '登录')
+
+const router = useRouter()
+const $q = useQuasar()
+
+const { showWarningMessage, showErrorMessage, showSuccessMessage } = useNotifications()
 
 const required = (val: string) => {
   return (val && val.length > 0) || '必填'
@@ -156,26 +97,59 @@ const isEmail = (val: string) => {
   return emailPattern.test(val) || '邮箱格式不符'
 }
 
-const submit = () => {
+// Placeholder for API call
+const loginApi = async (email: string, password: string) => {
+  // Simulate API call
+  await new Promise(resolve => setTimeout(resolve, 1000))
+  // For demo purposes, consider login successful if email contains 'test'
+  if (email.includes('test')) {
+    return { success: true, token: 'fake-jwt-token' }
+  }
+  throw new Error('Invalid credentials')
+}
+
+const submit = async () => {
   if (register.value) {
     emailRef.value?.validate()
     usernameRef.value.validate()
     passwordRef.value.validate()
     repasswordRef.value.validate()
+    // Add registration logic here if needed
+    showWarningMessage('暂时不支持注册')
   } else {
     emailRef.value.validate()
     passwordRef.value.validate()
-  }
 
-  if (!register.value) {
     if (!emailRef.value.hasError && !passwordRef.value.hasError) {
-      // Handle successful login
+      try {
+        $q.loading.show()
+        const result = await loginApi(email.value, password.value)
+        if (result.success) {
+          // Store the token in localStorage or a more secure place
+          localStorage.setItem('token', result.token)
+          
+          // Show success message
+          showSuccessMessage('登录成功')
+
+          // Redirect to dashboard or home page
+          router.push('/dashboard')
+        }
+      } catch (error) {
+        // Show error message
+        showErrorMessage('登录失败: ' + (error as Error).message)
+      } finally {
+        $q.loading.hide()
+      }
     }
   }
 }
 
 const switchTypeForm = () => {
   register.value = !register.value
+
+  if (register.value) {
+    showWarningMessage('暂时不支持注册')
+  }
 }
 
 const switchVisibility = () => {

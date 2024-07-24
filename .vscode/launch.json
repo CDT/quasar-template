@@ -11,6 +11,20 @@
       ],
       "console": "integratedTerminal",
       "program": "${workspaceFolder}\\back\\server.js"
+    },
+    {
+      "name": "front(edge)",
+      "request": "launch",
+      "type": "msedge",
+      "url": "http://localhost:9000",
+      "webRoot": "${workspaceFolder}"
+    },
+    {
+      "name": "front(chrome)",
+      "request": "launch",
+      "type": "chrome",
+      "url": "http://localhost:9000",
+      "webRoot": "${workspaceFolder}"
     }
   ]
 }
