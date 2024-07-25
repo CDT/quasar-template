@@ -128,9 +128,9 @@ const submit = async () => {
           // Redirect to dashboard or home page
           router.push('/dashboard')
         }
-      } catch (error) {
+      } catch (error: any) {
         // Show error message
-        showErrorMessage('登录失败: ' + (error as Error).message)
+        showErrorMessage('登录失败: ' + error.response?.data?.message || error.message)
       } finally {
         $q.loading.hide()
       }

@@ -74,7 +74,7 @@ exports.success = (response, data) => {
 }
 
 fail = (response, error, httpErrorCode=500, addon) => {
-  console.trace(error)
+  logger.error(error)
   response.status(httpErrorCode).json({success: false, message: error.message || error, ...addon})
 }
 exports.fail = fail
@@ -97,5 +97,24 @@ exports.startServer = function (app, port, is_multi_server) {
   } else {
     app.listen(port)
     logger.debug(`server started on port ${port}`)
+  }
+}
+
+exports.authorizeRole = (allowedRoles) => (req, res, next) => {
+  const token = req.headers.authorization?.split(' ')[1];
+    
+  if (!token) {
+    return fail(res, new Error('缺失token'), 401)
+  }
+  
+  try {
+    const decoded = jwt.verify(token, TOKEN_KEY);
+    if (!allowedRoles.includes(decoded.role)) {
+      return fail(res, '无权限', 401);
+    }
+    req.user = decoded;
+    next();
+  } catch (error) {
+    return fail(res, '非法token', 401);
   }
 }

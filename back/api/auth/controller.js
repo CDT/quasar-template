@@ -32,7 +32,7 @@ exports.loginDemo = async (req, res) => {
     }
 
     // Create and sign JWT
-    const token = jwt.sign( { userId: user.id }, TOKEN_KEY, { expiresIn: '1h' } );
+    const token = jwt.sign( { userId: user.id }, TOKEN_KEY, { expiresIn: TOKEN_EXPIRATION_TIME } );
 
     success(res, { token })
   } catch (error) {

@@ -17,7 +17,8 @@ export function useNotifications() {
       color: 'negative',
       message,
       icon: 'report_problem',
-      position: 'top'
+      position: 'top',
+      timeout: 2000
     })
   }
 
@@ -25,7 +26,8 @@ export function useNotifications() {
     $q.notify({
       color: 'positive',
       message,
-      icon: 'check'
+      icon: 'check',
+      timeout: 2000
     })
   }
 

@@ -12,5 +12,5 @@ exports.TOKEN_KEY = 'TONGJIYIYUAN123'
 exports.TOKEN_EXPIRATION_TIME = '24h'
 
 // GENERAL:
-exports.MULTI_SERVER = true
+exports.MULTI_SERVER = false
 exports.PORT = 3001
