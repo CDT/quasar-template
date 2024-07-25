@@ -3,7 +3,45 @@
 const { getParam, success, fail } = require('../../utils'), md5 = require('md5'), jwt = require('jsonwebtoken')
 const authModel = require('./Model'), { TOKEN_KEY, TOKEN_EXPIRATION_TIME } = require('../../config')
 
-// 登录
+// 登录demo
+exports.loginDemo = async (req, res) => {
+  const users = [
+    {
+      id: 1,
+      email: 'user@example.com',
+      password: '$2a$10$XOPbrlUPQdwdJUpSrIF6X.LbE14qsMmKGhM1A8W9iqDOMk9jlsPRS', // 'password123'
+    },
+  ];
+
+  try {
+    const { email, password } = req.body;
+
+    // Find user by email
+    const user = users.find(u => u.email === email);
+    if (!user) {
+      return res.status(400).json({ message: 'Invalid credentials' });
+    }
+
+    // Check password
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(400).json({ message: 'Invalid credentials' });
+    }
+
+    // Create and sign JWT
+    const token = jwt.sign(
+      { userId: user.id },
+      process.env.JWT_SECRET,
+      { expiresIn: '1h' }
+    );
+
+    res.json({ token });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error' });
+  }
+}
+
 exports.login = async (req, res) => {
  
   let username = getParam(req, 'username')

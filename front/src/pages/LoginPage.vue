@@ -56,10 +56,11 @@ import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useQuasar } from 'quasar'
 import { useNotifications } from 'src/composables/useNotifications'
+import { api } from 'boot/axios'
 
-const email = ref<string>('')
+const email = ref<string>('test@test.com')
 const username = ref<string>('')
-const password = ref<string>('')
+const password = ref<string>('123123')
 const repassword = ref<string>('')
 const register = ref<boolean>(false)
 const passwordFieldType = ref<'text' | 'password'>('password')
@@ -97,17 +98,6 @@ const isEmail = (val: string) => {
   return emailPattern.test(val) || '邮箱格式不符'
 }
 
-// Placeholder for API call
-const loginApi = async (email: string, password: string) => {
-  // Simulate API call
-  await new Promise(resolve => setTimeout(resolve, 1000))
-  // For demo purposes, consider login successful if email contains 'test'
-  if (email.includes('test')) {
-    return { success: true, token: 'fake-jwt-token' }
-  }
-  throw new Error('Invalid credentials')
-}
-
 const submit = async () => {
   if (register.value) {
     emailRef.value?.validate()
@@ -123,10 +113,14 @@ const submit = async () => {
     if (!emailRef.value.hasError && !passwordRef.value.hasError) {
       try {
         $q.loading.show()
-        const result = await loginApi(email.value, password.value)
-        if (result.success) {
+        const response: any = await api.post('/login', {
+          email: email.value,
+          password: password.value
+        })        
+
+        if (response.data.success) {
           // Store the token in localStorage or a more secure place
-          localStorage.setItem('token', result.token)
+          localStorage.setItem('token', response.token)
           
           // Show success message
           showSuccessMessage('登录成功')
