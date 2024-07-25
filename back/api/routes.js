@@ -3,7 +3,7 @@
 // 定义API地址和相应的Controller
 // 1. 用户、权限
 const authURL = '/auth';
-const authController = require('./auth/Controller');
+const authController = require('./auth/controller');
 
 module.exports = function(app) {
   // 1. 用户、权限

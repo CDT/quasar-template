@@ -3,7 +3,7 @@
 const { getParam, success, fail } = require('../../utils'),
   md5 = require('md5'),
   jwt = require('jsonwebtoken'),
-  authModel = require('./Model'),
+  authModel = require('./model'),
   { TOKEN_KEY, TOKEN_EXPIRATION_TIME } = require('../../config')
 
 // 登录demo
