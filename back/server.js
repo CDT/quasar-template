@@ -1,5 +1,5 @@
 var express = require('express'), 
-  { init, logger, startServer } = require('./utils'),
+  { init, startServer } = require('./utils'),
   routes = require('./api/routes'),
   { MULTI_SERVER, PORT } = require('./config')
 
