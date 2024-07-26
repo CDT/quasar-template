@@ -8,7 +8,7 @@ const { authorizeRole } = require('../utils')
 module.exports = function(app) {
   // 1. 用户、权限
   app.route('/api/login')
-    .post(authorizeRole('test'), authController.loginDemo);
+    .post(authController.loginDemo);
   // app.route(authURL + '/user')
   //   .get(authController.getUser);
 }

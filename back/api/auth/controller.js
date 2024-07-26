@@ -12,6 +12,7 @@ exports.loginDemo = async (req, res) => {
     {
       id: 1,
       username: 'test',
+      email: 'test@test.com',
       password: '$2a$10$XOPbrlUPQdwdJUpSrIF6X.LbE14qsMmKGhM1A8W9iqDOMk9jlsPRS', // 'password123'
     },
   ];
@@ -36,8 +37,7 @@ exports.loginDemo = async (req, res) => {
 
     success(res, { token })
   } catch (error) {
-    console.error(error);
-    fail(res, `服务器错误: ${error.message}`)
+    fail(res, new Error(`服务器错误: ${error.message}`))
   }
 }
 

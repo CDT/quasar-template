@@ -11,12 +11,12 @@
               <q-tooltip>新用户注册</q-tooltip>
             </q-fab>
             <q-form class="q-px-sm q-pt-xl">
-              <q-input ref="emailRef" square clearable v-model="email" type="email" lazy-rules :rules="[required, isEmail, short]" label="邮箱">
+              <q-input ref="emailRef" v-if="register" square clearable v-model="email" type="email" lazy-rules :rules="[required, isEmail, short]" label="邮箱">
                 <template v-slot:prepend>
                   <q-icon name="email" />
                 </template>
               </q-input>
-              <q-input ref="usernameRef" v-if="register" square clearable v-model="username" lazy-rules :rules="[required, short]" type="text" label="用户名">
+              <q-input ref="usernameRef" square clearable v-model="username" lazy-rules :rules="[required, short]" type="text" label="用户名">
                 <template v-slot:prepend>
                   <q-icon name="person" />
                 </template>
@@ -59,7 +59,7 @@ import { useNotifications } from 'src/composables/useNotifications'
 import { api } from 'boot/axios'
 
 const email = ref<string>('test@test.com')
-const username = ref<string>('')
+const username = ref<string>('test')
 const password = ref<string>('123123')
 const repassword = ref<string>('')
 const register = ref<boolean>(false)
@@ -107,16 +107,16 @@ const submit = async () => {
     // Add registration logic here if needed
     showWarningMessage('暂时不支持注册')
   } else {
-    emailRef.value.validate()
+    usernameRef.value.validate()
     passwordRef.value.validate()
 
-    if (!emailRef.value.hasError && !passwordRef.value.hasError) {
+    if (!usernameRef.value.hasError && !passwordRef.value.hasError) {
       try {
         $q.loading.show()
         const response: any = await api.post('/login', {
-          email: email.value,
+          username: username.value,
           password: password.value
-        })        
+        })
 
         if (response.data.success) {
           // Store the token in localStorage or a more secure place
@@ -130,7 +130,7 @@ const submit = async () => {
         }
       } catch (error: any) {
         // Show error message
-        showErrorMessage('登录失败: ' + error.response?.data?.message || error.message)
+        showErrorMessage('登录失败: ' + (error.response?.data?.message || error.message))
       } finally {
         $q.loading.hide()
       }
