@@ -2,7 +2,7 @@
   <q-page class="window-height window-width row justify-center items-center" style="background: linear-gradient(#8274C5, #5A4A9F);">
     <div class="column q-pa-lg">
       <div class="row">
-        <q-card square class="shadow-24" style="width:400px;height:540px;">
+        <q-card square class="shadow-24" style="width:400px;min-height:540px;">
           <q-card-section class="bg-deep-purple-7">
             <h4 class="text-h5 text-white q-my-md text-center">{{ title }}</h4>
           </q-card-section>
@@ -43,7 +43,7 @@
             <q-btn unelevated size="lg" color="secondary" @click="submit" class="full-width text-white" :label="btnLabel" />
           </q-card-actions>
           <q-card-section v-if="!register" class="text-center q-pa-sm">
-            <p class="text-grey-6">忘记密码？</p>
+            <a class="text-grey-6 text-no-decoration" href="#" @click="showWarningMessage('暂不支持')">忘记密码？</a>
           </q-card-section>
         </q-card>
       </div>
