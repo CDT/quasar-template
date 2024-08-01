@@ -52,103 +52,107 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
-import { useRouter } from 'vue-router'
-import { useQuasar } from 'quasar'
-import { useNotifications } from 'src/composables/useNotifications'
-import { api } from 'boot/axios'
+import { ref, computed } from 'vue';
+import { useRouter } from 'vue-router';
+import { useQuasar } from 'quasar';
+import { useNotifications } from 'src/composables/useNotifications';
+import { api } from 'boot/axios';
+import { useAuthStore } from 'src/stores/auth';
 
-const email = ref<string>('test@test.com')
-const username = ref<string>('test')
-const password = ref<string>('123123')
-const repassword = ref<string>('')
-const register = ref<boolean>(false)
-const passwordFieldType = ref<'text' | 'password'>('password')
-const visibility = ref<boolean>(false)
-const visibilityIcon = ref<string>('visibility')
+const email = ref<string>('test@test.com');
+const username = ref<string>('test');
+const password = ref<string>('123123');
+const repassword = ref<string>('');
+const register = ref<boolean>(false);
+const passwordFieldType = ref<'text' | 'password'>('password');
+const visibility = ref<boolean>(false);
+const visibilityIcon = ref<string>('visibility');
 
-const emailRef = ref<any>(null)
-const usernameRef = ref<any>(null)
-const passwordRef = ref<any>(null)
-const repasswordRef = ref<any>(null)
+const emailRef = ref<any>(null);
+const usernameRef = ref<any>(null);
+const passwordRef = ref<any>(null);
+const repasswordRef = ref<any>(null);
 
-const title = computed(() => (register.value ? '注册' : '登录') + process.env.PROJECT_NAME)
-const btnLabel = computed(() => register.value ? '注册' : '登录')
+const title = computed(() => (register.value ? '注册' : '登录') + process.env.PROJECT_NAME);
+const btnLabel = computed(() => register.value ? '注册' : '登录');
 
-const router = useRouter()
-const $q = useQuasar()
+const router = useRouter();
+const $q = useQuasar();
 
-const { showWarningMessage, showErrorMessage, showSuccessMessage } = useNotifications()
+const { showWarningMessage, showErrorMessage, showSuccessMessage } = useNotifications();
 
 const required = (val: string) => {
-  return (val && val.length > 0) || '必填'
+  return (val && val.length > 0) || '必填';
 }
 
 const diffPassword = (val: string) => {
-  const val2 = password.value
-  return val && val === val2 ? true : '不匹配'
+  const val2 = password.value;
+  return val && val === val2 ? true : '不匹配';
 }
 
 const short = (val: string) => {
-  return (val && val.length > 3) || '太短'
+  return (val && val.length > 3) || '太短';
 }
 
 const isEmail = (val: string) => {
-  const emailPattern = /^(?=[a-zA-Z0-9@._%+-]{6,254}$)[a-zA-Z0-9._%+-]{1,64}@(?:[a-zA-Z0-9-]{1,63}\.){1,8}[a-zA-Z]{2,63}$/
-  return emailPattern.test(val) || '邮箱格式不符'
+  const emailPattern = /^(?=[a-zA-Z0-9@._%+-]{6,254}$)[a-zA-Z0-9._%+-]{1,64}@(?:[a-zA-Z0-9-]{1,63}\.){1,8}[a-zA-Z]{2,63}$/;
+  return emailPattern.test(val) || '邮箱格式不符';
 }
 
 const submit = async () => {
   if (register.value) {
-    emailRef.value?.validate()
-    usernameRef.value.validate()
-    passwordRef.value.validate()
-    repasswordRef.value.validate()
+    emailRef.value?.validate();
+    usernameRef.value.validate();
+    passwordRef.value.validate();
+    repasswordRef.value.validate();
     // Add registration logic here if needed
-    showWarningMessage('暂时不支持注册')
+    showWarningMessage('暂时不支持注册');
   } else {
-    usernameRef.value.validate()
-    passwordRef.value.validate()
+    usernameRef.value.validate();
+    passwordRef.value.validate();
 
     if (!usernameRef.value.hasError && !passwordRef.value.hasError) {
       try {
-        $q.loading.show()
+        $q.loading.show();
         const response: any = await api.post('/login', {
           username: username.value,
           password: password.value
-        })
+        });
 
         if (response.data.success) {
           // Store the token in localStorage or a more secure place
-          localStorage.setItem('token', response.token)
+          localStorage.setItem('token', response.token);
           
           // Show success message
-          showSuccessMessage('登录成功')
+          showSuccessMessage('登录成功');
+
+          // test
+          const authStore = useAuthStore();
 
           // Redirect to dashboard or home page
-          router.push('/dashboard')
+          router.push('/');
         }
       } catch (error: any) {
         // Show error message
-        showErrorMessage('登录失败: ' + (error.response?.data?.message || error.message))
+        showErrorMessage('登录失败: ' + (error.response?.data?.message || error.message));
       } finally {
-        $q.loading.hide()
+        $q.loading.hide();
       }
     }
   }
 }
 
 const switchTypeForm = () => {
-  register.value = !register.value
+  register.value = !register.value;
 
   if (register.value) {
-    showWarningMessage('暂时不支持注册')
+    showWarningMessage('暂时不支持注册');
   }
 }
 
 const switchVisibility = () => {
-  visibility.value = !visibility.value
-  passwordFieldType.value = visibility.value ? 'text' : 'password'
-  visibilityIcon.value = visibility.value ? 'visibility_off' : 'visibility'
+  visibility.value = !visibility.value;
+  passwordFieldType.value = visibility.value ? 'text' : 'password';
+  visibilityIcon.value = visibility.value ? 'visibility_off' : 'visibility';
 }
 </script>

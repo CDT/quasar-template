@@ -10,6 +10,7 @@ export const useAuthStore = defineStore('auth', {
   actions: {
     login() {
       // Implement login logic
+      console.log(this)
       this.isAuthenticated = true;
     },
     logout() {

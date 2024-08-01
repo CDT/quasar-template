@@ -27,6 +27,7 @@ export function useNotifications() {
       color: 'positive',
       message,
       icon: 'check',
+      position: 'top',
       timeout: 2000
     })
   }
