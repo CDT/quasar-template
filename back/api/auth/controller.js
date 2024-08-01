@@ -28,7 +28,6 @@ exports.loginDemo = async (req, res) => {
     }
 
     // Check password
-    logger.debug(await bcrypt.hash(password, 10))
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       return fail(res, '用户名或密码错误', 400);
