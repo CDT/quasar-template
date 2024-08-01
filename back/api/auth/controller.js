@@ -4,6 +4,7 @@ const { getParam, success, fail } = require('../../utils'),
   md5 = require('md5'),
   jwt = require('jsonwebtoken'),
   authModel = require('./model'),
+  bcrypt = require('bcrypt'),
   { TOKEN_KEY, TOKEN_EXPIRATION_TIME } = require('../../config')
 
 // 登录demo
@@ -13,7 +14,7 @@ exports.loginDemo = async (req, res) => {
       id: 1,
       username: 'test',
       email: 'test@test.com',
-      password: '$2a$10$XOPbrlUPQdwdJUpSrIF6X.LbE14qsMmKGhM1A8W9iqDOMk9jlsPRS', // 'password123'
+      password: '$2b$10$7YOx5O6HIweTBpFUDEwbMuTRH9Mi4awatic2aR22N2/XGKbEfhDe2' // 123123
     },
   ];
 
@@ -27,6 +28,7 @@ exports.loginDemo = async (req, res) => {
     }
 
     // Check password
+    logger.debug(await bcrypt.hash(password, 10))
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       return fail(res, '用户名或密码错误', 400);
