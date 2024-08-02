@@ -56,7 +56,6 @@ import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useQuasar } from 'quasar'
 import { useNotifications } from 'src/composables/useNotifications'
-import { api } from 'boot/axios'
 import { useAuthStore } from 'src/stores/auth'
 
 const email = ref<string>('test@test.com')
