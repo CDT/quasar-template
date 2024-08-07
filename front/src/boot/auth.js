@@ -1,8 +1,6 @@
 import { useAuthStore } from 'stores/auth'
 
-// TODO any and this does not work
-export default ({ app } : { app: any }) => {
-  console.log(app)
+export default ({ app }) => {
   const authStore = useAuthStore()
   authStore.initializeAuth()
 }
