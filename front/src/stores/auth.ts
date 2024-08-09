@@ -1,23 +1,26 @@
 // src/stores/auth.ts
 import { defineStore } from 'pinia'
 import { api } from 'boot/axios' // Assuming you're using Axios for API calls
-import { AuthState, Credentials } from 'src/types'
+import { AuthState, Credentials, User } from 'src/types'
 
 export const useAuthStore = defineStore('auth', {
   state: (): AuthState => ({
     token: null,
     isAuthenticated: false,
+    user: null
   }),
 
   actions: {
     async login(credentials: Credentials): Promise<boolean> {
       try {
-        const response = await api.post<{ token: string }>('/login', credentials)
-        this.token = response.data.token
+        const response = await api.post('/login', credentials)
+        this.token = response.data.data.token
+        this.user = response.data.data.user
         this.isAuthenticated = true
 
         // Store token in localStorage for persistence
-        localStorage.setItem('token', this.token)
+        localStorage.setItem('token', this.token || '')
+        localStorage.setItem('user', JSON.stringify(this.user))
 
         return true
       } catch (error) {
@@ -28,8 +31,10 @@ export const useAuthStore = defineStore('auth', {
 
     logout(): void {
       this.token = null
+      this.user = null
       this.isAuthenticated = false
       localStorage.removeItem('token')
+      localStorage.removeItem('user')
     },
 
     async initializeAuth(): Promise<void> {
@@ -37,17 +42,18 @@ export const useAuthStore = defineStore('auth', {
       if (token) {
         try {
           // Send a request to the server to validate the token
-          const response = await api.post('/validate-token', { token })
+          const response = await api.post('/login', { token })
 
-          if (response.data.isValid) {
-            this.token = token
+          if (response.data.success) {
+            this.token = response.data.data.token
+            this.user = response.data.data.user
             this.isAuthenticated = true
           } else {
             // Token is invalid or expired
             this.logout()
           }
-        } catch (error) {
-          console.error('Token validation failed:', error)
+        } catch (error: any) {
+          console.error('Token validation failed:', error.response?.data?.message || error.message)
           this.logout()
         }
       } else {
@@ -59,5 +65,6 @@ export const useAuthStore = defineStore('auth', {
   getters: {
     getToken: (state: AuthState): string | null => state.token,
     getIsAuthenticated: (state: AuthState): boolean => state.isAuthenticated,
+    getUser: (state: AuthState): User | null => state.user
   }
 })

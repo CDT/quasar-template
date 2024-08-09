@@ -7,8 +7,16 @@ const { authorizeRole } = require('../utils')
 
 module.exports = function(app) {
   // 1. 用户、权限
-  app.route('/api/login')
-    .post(authController.loginDemo);
+  app.post('/api/validate-token', authController.validateToken)
+  app.post('/api/login', authController.loginDemo)
   // app.route(authURL + '/user')
   //   .get(authController.getUser);
+
+  // Add this at the end of all your routes
+  app.use('*', (_, res) => {
+    res.status(404).json({
+      success: false,
+      message: 'invalid route'
+    })
+  })
 }

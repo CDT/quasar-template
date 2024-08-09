@@ -2,6 +2,25 @@ import axios from 'axios'
 
 const api = axios.create({ baseURL: process.env.API_BASE })
 
+// Add a request interceptor
+api.interceptors.request.use(
+  (config) => {
+    // Get the token from localStorage or wherever you store it
+    const token = localStorage.getItem('token')
+    
+    // If token exists, add it to the headers
+    if (token) {
+      config.headers['Authorization'] = `Bearer ${token}`
+    }
+    
+    return config
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+)
+
+
 export default ({ app }) => {
   // for use inside Vue files (Options API) through this.$axios and this.$api
 

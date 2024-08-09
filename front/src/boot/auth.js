@@ -1,6 +1,6 @@
 import { useAuthStore } from 'stores/auth'
 
-export default ({ app }) => {
+export default () => {
   const authStore = useAuthStore()
   authStore.initializeAuth()
 }
