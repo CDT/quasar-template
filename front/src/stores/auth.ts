@@ -18,13 +18,13 @@ export const useAuthStore = defineStore('auth', {
         this.user = response.data.data.user
         this.isAuthenticated = true
 
-        // Store token in localStorage for persistence
         localStorage.setItem('token', this.token || '')
         localStorage.setItem('user', JSON.stringify(this.user))
 
         return true
       } catch (error) {
         console.error('Login failed:', error)
+        this.logout()
         return false
       }
     },
@@ -37,29 +37,40 @@ export const useAuthStore = defineStore('auth', {
       localStorage.removeItem('user')
     },
 
-    async initializeAuth(): Promise<void> {
+    async initializeAuth() {
       const token = localStorage.getItem('token')
       if (token) {
-        try {
-          // Send a request to the server to validate the token
-          const response = await api.post('/login', { token })
-
-          if (response.data.success) {
-            this.token = response.data.data.token
-            this.user = response.data.data.user
-            this.isAuthenticated = true
-          } else {
-            // Token is invalid or expired
-            this.logout()
-          }
-        } catch (error: any) {
-          console.error('Token validation failed:', error.response?.data?.message || error.message)
-          this.logout()
-        }
-      } else {
-        this.logout()
+        await this.login({ token })
+        const authStore = useAuthStore()
+        console.log(authStore.isAuthenticated)
       }
     }
+
+    // async initializeAuth(): Promise<void> {
+    //   const token = localStorage.getItem('token')
+    //   if (token) {
+    //     try {
+    //       // Send a request to the server to validate the token
+    //       const response = await api.post('/login', { token })
+
+    //       if (response.data.success) {
+    //         this.token = response.data.data.token
+    //         this.user = response.data.data.user
+    //         this.isAuthenticated = true
+    //         localStorage.setItem('token', this.token || '')
+    //         localStorage.setItem('user', JSON.stringify(this.user))
+    //       } else {
+    //         // Token is invalid or expired
+    //         this.logout()
+    //       }
+    //     } catch (error: any) {
+    //       console.error('Token validation failed:', error.response?.data?.message || error.message)
+    //       this.logout()
+    //     }
+    //   } else {
+    //     this.logout()
+    //   }
+    // }
   },
 
   getters: {

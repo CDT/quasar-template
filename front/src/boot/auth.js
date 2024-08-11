@@ -1,6 +1,6 @@
 import { useAuthStore } from 'stores/auth'
 
-export default () => {
+export default async () => {
   const authStore = useAuthStore()
-  authStore.initializeAuth()
+  await authStore.initializeAuth()
 }

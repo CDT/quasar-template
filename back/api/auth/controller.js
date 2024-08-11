@@ -26,10 +26,6 @@ exports.login = async (req, res) => {
 }
 
 // 登录demo
-const jwt = require('jsonwebtoken');
-const bcrypt = require('bcrypt');
-
-// 登录demo
 exports.loginDemo = async (req, res) => {
   const users = [
     {
@@ -38,38 +34,38 @@ exports.loginDemo = async (req, res) => {
       roles: ['doc', 'nurse'],
       password: '$2b$10$7YOx5O6HIweTBpFUDEwbMuTRH9Mi4awatic2aR22N2/XGKbEfhDe2' // 123123
     },
-  ];
+  ]
 
   try {
-    const { username, password, token } = req.body;
+    const { username, password, token } = req.body
 
-    let user;
+    let user
 
     if (token) {
       // Login with token
       try {
-        const decoded = jwt.verify(token, TOKEN_KEY);
-        user = users.find(u => u.username === decoded.username);
+        const decoded = jwt.verify(token, TOKEN_KEY)
+        user = users.find(u => u.username === decoded.username)
         if (!user) {
-          return fail(res, '无效Token', 401);
+          return fail(res, '无效Token', 401)
         }
       } catch (error) {
-        return fail(res, '无效Token或Token已过期', 401);
+        return fail(res, error.message || '未知错误', 401)
       }
     } else if (username && password) {
       // Login with username and password
-      user = users.find(u => u.username === username);
+      user = users.find(u => u.username === username)
       if (!user) {
-        return fail(res, '无效用户名', 400);
+        return fail(res, '无效用户名', 400)
       }
 
       // Check password
-      const isMatch = await bcrypt.compare(password, user.password);
+      const isMatch = await bcrypt.compare(password, user.password)
       if (!isMatch) {
-        return fail(res, '用户名或密码错误', 400);
+        return fail(res, '用户名或密码错误', 400)
       }
     } else {
-      return fail(res, '请提供用户名和密码或有效Token', 400);
+      return fail(res, '请提供用户名和密码或有效Token', 400)
     }
 
     // Create and sign JWT
@@ -77,18 +73,17 @@ exports.loginDemo = async (req, res) => {
       { username: user.username, roles: user.roles },
       TOKEN_KEY,
       { expiresIn: TOKEN_EXPIRATION_TIME }
-    );
+    )
 
     success(res, { 
       token: newToken,
       user: {
         username: user.username,
-        email: user.email,
         roles: user.roles
       }
-    });
+    })
   } catch (error) {
-    fail(res, new Error(`服务器错误: ${error.message}`));
+    fail(res, new Error(`服务器错误: ${error.message}`))
   }
 }
 

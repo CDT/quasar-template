@@ -35,15 +35,15 @@ export default route(function (/* { store, ssrContext } */) {
 
   // check auth guard:
   Router.beforeEach((to, from, next) => {
-    const authStore = useAuthStore();
-    const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
+    const authStore = useAuthStore()
+    const requiresAuth = to.matched.some(record => record.meta.requiresAuth)
 
     if (requiresAuth && !authStore.isAuthenticated) {
-      next('/login');
+      next('/login')
     } else {
-      next();
+      next()
     }
-  });
+  })
 
-  return Router;
-});
+  return Router
+})
