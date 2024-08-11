@@ -2,11 +2,11 @@
   <div class="fullscreen bg-blue text-white text-center q-pa-md flex flex-center">
     <div>
       <div style="font-size: 30vh">
-        404
+        {{ code }}
       </div>
 
       <div class="text-h2" style="opacity:.4">
-        啥都没有......
+        {{ message }}
       </div>
 
       <q-btn
@@ -23,6 +23,17 @@
 </template>
 
 <script setup lang="ts">
+defineProps({
+  code: {
+    type: String,
+    default: '404'
+  },
+  message: {
+    type: String,
+    default: '啥都没有'
+  }
+})
+
 defineOptions({
   name: 'ErrorNotFound'
 });
