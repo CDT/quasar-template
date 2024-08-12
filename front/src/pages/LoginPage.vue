@@ -43,7 +43,7 @@
             <q-btn unelevated size="lg" color="secondary" @click="submit" class="full-width text-white" :label="btnLabel" />
           </q-card-actions>
           <q-card-section v-if="!register" class="text-center q-pa-sm">
-            <a class="text-grey-6 text-no-decoration" href="#" @click="showWarningMessage('暂不支持')">忘记密码？</a>
+            <a class="text-grey-6 text-no-decoration" href="#" @click="showNotification('暂不支持', 'warning')">忘记密码？</a>
           </q-card-section>
         </q-card>
       </div>
@@ -55,7 +55,7 @@
 import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useQuasar } from 'quasar'
-import { useNotifications } from 'src/composables/useNotifications'
+import { showNotification } from 'src/utils/notifications'
 import { useAuthStore } from 'src/stores/auth'
 
 const email = ref<string>('test@test.com')
@@ -78,8 +78,6 @@ const btnLabel = computed(() => register.value ? '注册' : '登录')
 const router = useRouter()
 const $q = useQuasar()
 const authStore = useAuthStore()
-
-const { showWarningMessage, showErrorMessage, showSuccessMessage } = useNotifications()
 
 const required = (val: string) => {
   return (val && val.length > 0) || '必填'
@@ -106,7 +104,7 @@ const submit = async () => {
     passwordRef.value.validate()
     repasswordRef.value.validate()
     // Add registration logic here if needed
-    showWarningMessage('暂时不支持注册')
+    showNotification('暂时不支持注册', 'warning')
   } else {
     usernameRef.value.validate()
     passwordRef.value.validate()
@@ -122,14 +120,14 @@ const submit = async () => {
 
         if (success) {
           // Show success message
-          showSuccessMessage('登录成功')
+          showNotification('登录成功', 'positive')
 
           // Redirect to dashboard or home page
           router.push('/')
         }
       } catch (error: any) {
         // Show error message
-        showErrorMessage('登录失败: ' + (error.response?.data?.message || error.message))
+        showNotification('登录失败: ' + (error.response?.data?.message || error.message), 'negative')
       } finally {
         $q.loading.hide()
       }
@@ -141,7 +139,7 @@ const switchTypeForm = () => {
   register.value = !register.value
 
   if (register.value) {
-    showWarningMessage('暂时不支持注册')
+    showNotification('暂时不支持注册', 'warning')
   }
 }
 

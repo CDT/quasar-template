@@ -42,7 +42,6 @@ export const useAuthStore = defineStore('auth', {
       if (token) {
         await this.login({ token })
         const authStore = useAuthStore()
-        console.log(authStore.isAuthenticated)
       }
     }
 

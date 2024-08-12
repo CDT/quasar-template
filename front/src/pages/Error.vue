@@ -25,8 +25,8 @@
 <script setup lang="ts">
 defineProps({
   code: {
-    type: String,
-    default: '404'
+    type: Number,
+    default: 404
   },
   message: {
     type: String,
@@ -35,6 +35,6 @@ defineProps({
 })
 
 defineOptions({
-  name: 'ErrorNotFound'
-});
+  name: 'Error'
+})
 </script>

@@ -12,32 +12,30 @@
         />
 
         <q-toolbar-title>
-          {{ projectName }}
+          Quasar App
         </q-toolbar-title>
 
-        <q-btn flat round dense>
-          <q-avatar color="warning" text-color="white">
-            {{ authStore.getUser?.username.charAt(0) }}
-            <q-tooltip>{{ authStore.getUser?.username }}</q-tooltip>
-          </q-avatar>
-          <q-menu>
-            <q-list style="min-width: 100px">
-              <q-item clickable v-close-popup @click="showNotification('TODO', 'info')">
-                <q-item-section>Logout</q-item-section>
-              </q-item>
-            </q-list>
-          </q-menu>
-        </q-btn>
+        <div>Quasar v{{ $q.version }}</div>
       </q-toolbar>
     </q-header>
 
-    <q-drawer v-model="leftDrawerOpen" bordered>
+    <q-drawer
+      v-model="leftDrawerOpen"
+      show-if-above
+      bordered
+    >
       <q-list>
-        <q-item-label header>
+        <q-item-label
+          header
+        >
           Essential Links
         </q-item-label>
 
-        <EssentialLink v-for="link in linksList" :key="link.title" v-bind="link"/>
+        <EssentialLink
+          v-for="link in linksList"
+          :key="link.title"
+          v-bind="link"
+        />
       </q-list>
     </q-drawer>
 
@@ -48,16 +46,12 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import EssentialLink, { EssentialLinkProps } from 'components/EssentialLink.vue'
-import { showNotification } from 'src/utils/notifications'
-import { useAuthStore } from 'src/stores/auth'
-
-const authStore = useAuthStore()
+import { ref } from 'vue';
+import EssentialLink, { EssentialLinkProps } from 'components/EssentialLink.vue';
 
 defineOptions({
   name: 'MainLayout'
-})
+});
 
 const linksList: EssentialLinkProps[] = [
   {
@@ -102,13 +96,11 @@ const linksList: EssentialLinkProps[] = [
     icon: 'favorite',
     link: 'https://awesome.quasar.dev'
   }
-]
+];
 
-const leftDrawerOpen = ref(false)
-const projectName = process.env.PROJECT_NAME
+const leftDrawerOpen = ref(false);
 
 function toggleLeftDrawer () {
-  leftDrawerOpen.value = !leftDrawerOpen.value
-  console.log(leftDrawerOpen.value)
+  leftDrawerOpen.value = !leftDrawerOpen.value;
 }
 </script>
