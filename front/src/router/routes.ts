@@ -8,7 +8,23 @@ const routes: RouteRecordRaw[] = [
       path: '',
       component: () => import('pages/IndexPage.vue'),
       meta: {
-        requiresAuth: true
+        requiresAuth: true,
+        name: '主页'
+      }
+    }, {
+      path: '/query/depts',
+      component: () => import('pages/QueryDepts.vue'),
+      meta: {
+        requiresAuth: true,
+        name: '科室查询'
+      }
+    }, {
+      path: '/query/emps',
+      component: () => import('pages/QueryEmps.vue'),
+      meta: {
+        requiresAuth: true,
+        requiredRoles: ['admin', 'doc'],
+        name: '员工检索'
       }
     }],
   },
@@ -33,6 +49,6 @@ const routes: RouteRecordRaw[] = [
     path: '/:catchAll(.*)*',
     component: () => import('pages/Error.vue'),
   },
-];
+]
 
-export default routes;
+export default routes

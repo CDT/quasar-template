@@ -2,17 +2,13 @@
   <q-layout view="lHh Lpr lFf">
     <q-header elevated>
       <q-toolbar>
-        <q-btn
-          flat
-          dense
-          round
-          icon="menu"
-          aria-label="Menu"
-          @click="toggleLeftDrawer"
-        />
+        <q-btn flat dense round icon="menu" aria-label="Menu" @click="toggleLeftDrawer" />
 
         <q-toolbar-title>
+          <router-link to="/"  class="text-white text-no-decoration">
           {{ projectName }}
+          </router-link>
+          / {{ $route.meta.name }}
         </q-toolbar-title>
 
         <q-btn flat round dense>
@@ -22,8 +18,9 @@
           </q-avatar>
           <q-menu>
             <q-list style="min-width: 100px">
-              <q-item clickable v-close-popup @click="showNotification('TODO', 'info')">
-                <q-item-section>Logout</q-item-section>
+              <q-item clickable v-close-popup @click="logout">
+                <q-item-section><q-icon name="logout" /></q-item-section>
+                <q-item-section>退出</q-item-section>
               </q-item>
             </q-list>
           </q-menu>
@@ -34,10 +31,10 @@
     <q-drawer v-model="leftDrawerOpen" bordered>
       <q-list>
         <q-item-label header>
-          Essential Links
+          常用功能
         </q-item-label>
 
-        <EssentialLink v-for="link in linksList" :key="link.title" v-bind="link"/>
+        <EssentialLink v-for="link in filteredLinks" :key="link.title" v-bind="link" />
       </q-list>
     </q-drawer>
 
@@ -48,12 +45,13 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import EssentialLink, { EssentialLinkProps } from 'components/EssentialLink.vue'
-import { showNotification } from 'src/utils/notifications'
 import { useAuthStore } from 'src/stores/auth'
+import { useRouter } from 'vue-router'
 
 const authStore = useAuthStore()
+const router = useRouter()
 
 defineOptions({
   name: 'MainLayout'
@@ -61,54 +59,43 @@ defineOptions({
 
 const linksList: EssentialLinkProps[] = [
   {
-    title: 'Docs',
-    caption: 'quasar.dev',
-    icon: 'school',
-    link: 'https://quasar.dev'
+    title: '科室查询',
+    caption: '院内科室信息查询',
+    icon: 'apartment',
+    link: '/query/depts'
   },
   {
-    title: 'Github',
-    caption: 'github.com/quasarframework',
-    icon: 'code',
-    link: 'https://github.com/quasarframework'
-  },
-  {
-    title: 'Discord Chat Channel',
-    caption: 'chat.quasar.dev',
-    icon: 'chat',
-    link: 'https://chat.quasar.dev'
-  },
-  {
-    title: 'Forum',
-    caption: 'forum.quasar.dev',
-    icon: 'record_voice_over',
-    link: 'https://forum.quasar.dev'
-  },
-  {
-    title: 'Twitter',
-    caption: '@quasarframework',
-    icon: 'rss_feed',
-    link: 'https://twitter.quasar.dev'
-  },
-  {
-    title: 'Facebook',
-    caption: '@QuasarFramework',
-    icon: 'public',
-    link: 'https://facebook.quasar.dev'
-  },
-  {
-    title: 'Quasar Awesome',
-    caption: 'Community Quasar projects',
-    icon: 'favorite',
-    link: 'https://awesome.quasar.dev'
+    title: '员工检索',
+    caption: '员工基本信息检索',
+    icon: 'account_box',
+    link: '/query/emps'
   }
 ]
 
-const leftDrawerOpen = ref(false)
+const filteredLinks = computed(() => {
+  return linksList.filter( (link: EssentialLinkProps) => {
+    if (!link.link) return false
+    const route = router.resolve(link.link)
+    const requiredRoles = route.meta.requiredRoles as string[] || []
+
+    // If no roles are required, show the link
+    if (requiredRoles.length === 0) return true
+
+    // Check if user has at least one of the required roles
+    return authStore.user?.roles.some(role => requiredRoles.includes(role))
+  })
+})
+
+const leftDrawerOpen = ref(true)
 const projectName = process.env.PROJECT_NAME
 
-function toggleLeftDrawer () {
+const toggleLeftDrawer = () => {
   leftDrawerOpen.value = !leftDrawerOpen.value
   console.log(leftDrawerOpen.value)
+}
+
+const logout = () => {
+  authStore.logout()
+  router.push('/login')
 }
 </script>

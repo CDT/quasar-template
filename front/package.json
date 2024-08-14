@@ -2,7 +2,7 @@
   "name": "quasar-project",
   "version": "0.0.1",
   "description": "A Quasar Project",
-  "productName": "Quasar App",
+  "productName": "Quasar项目",
   "author": "CDT <779888925@qq.com>",
   "private": true,
   "scripts": {

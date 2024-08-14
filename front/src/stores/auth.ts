@@ -45,31 +45,6 @@ export const useAuthStore = defineStore('auth', {
       }
     }
 
-    // async initializeAuth(): Promise<void> {
-    //   const token = localStorage.getItem('token')
-    //   if (token) {
-    //     try {
-    //       // Send a request to the server to validate the token
-    //       const response = await api.post('/login', { token })
-
-    //       if (response.data.success) {
-    //         this.token = response.data.data.token
-    //         this.user = response.data.data.user
-    //         this.isAuthenticated = true
-    //         localStorage.setItem('token', this.token || '')
-    //         localStorage.setItem('user', JSON.stringify(this.user))
-    //       } else {
-    //         // Token is invalid or expired
-    //         this.logout()
-    //       }
-    //     } catch (error: any) {
-    //       console.error('Token validation failed:', error.response?.data?.message || error.message)
-    //       this.logout()
-    //     }
-    //   } else {
-    //     this.logout()
-    //   }
-    // }
   },
 
   getters: {
