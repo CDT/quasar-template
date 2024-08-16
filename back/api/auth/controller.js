@@ -3,7 +3,7 @@
 const { getParam, success, fail } = require('../../utils'),
   md5 = require('md5'),
   jwt = require('jsonwebtoken'),
-  authModel = require('./model'),
+  model = require('./model'),
   bcrypt = require('bcrypt'),
   { TOKEN_KEY, TOKEN_EXPIRATION_TIME } = require('../../config')
 
@@ -15,7 +15,7 @@ exports.login = async (req, res) => {
   if (!username) return fail(res, 'missing param username', 400)
   if (!password) return fail(res, 'missing param password', 400)
   
-  let user = (await authModel.findUser({username, password: md5(password)})).rows[0]
+  let user = (await model.findUser({username, password: md5(password)})).rows[0]
   if (user) {
     user.token = jwt.sign({username: user.user_name}, TOKEN_KEY, { expiresIn: TOKEN_EXPIRATION_TIME } )
     success(res, user)
@@ -107,7 +107,7 @@ exports.getUser = async (req, res) => {
  
   let username = getParam(req, 'username')
   
-  let user = (await authModel.findUser({username})).rows[0]
+  let user = (await model.findUser({username})).rows[0]
 
   success(res, user)
 }

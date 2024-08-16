@@ -1,5 +1,5 @@
 var oracledb = require('oracledb')
-const {ORACLE_URI, ORACLE_USER, ORACLE_PASSWORD} = require('./config')
+const { DBS } = require('./config')
 const log4js = require('log4js')
 
 // 日志
@@ -8,15 +8,14 @@ fileLogger = log4js.getLogger('file')
 
 // 初始化Oracle
 exports.initOracle = () => {
-  let connectionString = ORACLE_URI
-  let user = ORACLE_USER
-  let password = ORACLE_PASSWORD
-  oracledb.createPool({ connectionString, user, password },
-    (err, pool) => {
-      if (err) console.trace(err)
-      logger.info('oracle pool created: ' + connectionString + ' ' + user + '/' + password)
-    }
-  )
+  DBS.forEach(DB => {
+    oracledb.createPool(DB,
+      (err, pool) => {
+        if (err) console.trace(err)
+        logger.info(`oracle pool [${DB.poolAlias}] created: ` + DB.connectionString + ' ' + DB.user + '/' + DB.password)
+      }
+    )
+  })
   oracledb.outFormat = oracledb.OBJECT
   process.on('exit', closeOracle)
 }
@@ -40,7 +39,7 @@ function execute (statement, binds = {}, opts = {}) {
         try {
           await conn.close()
         } catch (err) {
-          console.trace(err)
+          logger.error(err)
           reject(err)
         }
       }

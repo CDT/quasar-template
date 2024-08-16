@@ -1,7 +1,7 @@
 // 数据库：
-exports.ORACLE_URI = 'db.his.tjh.com/orcl'
-exports.ORACLE_USER = 'dtchen'
-exports.ORACLE_PASSWORD = '86915998'
+exports.DBS = [
+  { connectionString: 'db.his.tjh.com/orcl', user: 'dtchen', password: '86915998', poolAlias: 'default'}
+]
 
 // MAIL:
 exports.MAIL_ADDRESS = '779888925@qq.com'

@@ -4,7 +4,7 @@ var express = require('express'),
   { MULTI_SERVER, PORT } = require('./config')
 
 // 初始化Oracle
-// require('./database').initOracle()
+require('./database').initOracle()
 
 // 创建后台服务器，初始化，配置路由
 let app = express()

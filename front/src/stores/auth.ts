@@ -11,7 +11,7 @@ export const useAuthStore = defineStore('auth', {
   }),
 
   actions: {
-    async login(credentials: Credentials): Promise<boolean> {
+    async login(credentials: Credentials): Promise<void> {
       try {
         const response = await api.post('/login', credentials)
         this.token = response.data.data.token
@@ -20,12 +20,9 @@ export const useAuthStore = defineStore('auth', {
 
         localStorage.setItem('token', this.token || '')
         localStorage.setItem('user', JSON.stringify(this.user))
-
-        return true
-      } catch (error) {
-        console.error('Login failed:', error)
+      } catch (error: any) {
         this.logout()
-        return false
+        throw error
       }
     },
 

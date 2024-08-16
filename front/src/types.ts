@@ -15,3 +15,8 @@ export interface User {
   email: string
   roles: string[]
 }
+
+export interface SelectOption {
+  label: string,
+  value: string | null
+}

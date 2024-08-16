@@ -113,20 +113,15 @@ const submit = async () => {
       try {
         $q.loading.show()
 
-        const success = await authStore.login({
+        await authStore.login({
           username: username.value,
           password: password.value
         })
 
-        if (success) {
-          // Show success message
-          showNotification('登录成功', 'positive')
-
-          // Redirect to dashboard or home page
-          router.push('/')
-        }
+        showNotification('登录成功', 'positive')
+        router.push('/')
+        
       } catch (error: any) {
-        // Show error message
         showNotification('登录失败: ' + (error.response?.data?.message || error.message), 'negative')
       } finally {
         $q.loading.hide()
