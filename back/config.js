@@ -12,5 +12,6 @@ exports.TOKEN_KEY = 'TONGJIYIYUAN123'
 exports.TOKEN_EXPIRATION_TIME = '24h'
 
 // GENERAL:
+exports.MOCK = true // 本地测试
 exports.MULTI_SERVER = false
 exports.PORT = 3001

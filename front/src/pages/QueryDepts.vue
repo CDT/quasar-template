@@ -70,11 +70,9 @@ const searchDepartments = async () => {
 
 // 初始化数据
 api.get('/options?dict=ORG_TYPE').then( (resp: any) => {
-  console.log(resp.data.data)
-  // TODO
-  departmentTypes.value.concat(resp.data.data)
+  departmentTypes.value.push(...resp.data.data)
 }).catch( (error: any) => {
   showErrorRespNotification(error)
 })
- 
+
 </script>

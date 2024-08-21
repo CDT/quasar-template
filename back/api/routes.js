@@ -12,10 +12,11 @@ module.exports = function(app) {
   app.post('/api/login', authController.loginDemo)
   // app.route(authURL + '/user')
   //   .get(authController.getUser);
-
+  
   
   // 其他
   app.get('/api/options', miscController.getOptions)
+  app.get('/api/depts', miscController.getDepts)
 
   // Add this at the end of all your routes
   app.use('*', (_, res) => {
