@@ -17,6 +17,15 @@ export interface User {
 }
 
 export interface SelectOption {
-  label: string,
+  label: string
   value: string | null
+}
+
+export interface Dept {
+  area_name?: string,
+  name: string
+  addr?: string
+  type_name?: string
+  phone?: string
+  sup_dept_name?: string
 }

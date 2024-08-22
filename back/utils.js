@@ -118,3 +118,12 @@ exports.authorizeRole = (allowedRoles) => (req, res, next) => {
     return fail(res, '非法token', 401);
   }
 }
+
+
+// 删除对象中的空属性
+exports.removeNullProps = o => {
+  for (let p in o) {
+    if (o[p] === null || o[p] === undefined || o[p] === NaN || o[p] === '') delete o[p]
+  }
+  return o
+}

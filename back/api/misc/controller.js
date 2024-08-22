@@ -1,6 +1,6 @@
 'use strict'
 
-const { success, fail } = require('../../utils'),
+const { success, fail, removeNullProps } = require('../../utils'),
   model = require('./model'),
   { MOCK } = require('../../config'),
   { MOCK_OPTIONS_DATA, MOCK_DEPTS_DATA } = require('../mock_data')
@@ -38,22 +38,11 @@ exports.getDepts = async (req, res) => {
   const { keyword, type } = req.query
 
   // MOCK数据
-  if (MOCK) return success(res, MOCK_DEPTS_DATA[dict || t_id])
-
-  let dictOptions = []
+  if (MOCK) return success(res, MOCK_DEPTS_DATA)
 
   try {
-    if (dict) {
-      // dictOptions = (await model.getDictOptions({ dict })).rows
-      const rows = (await model.getDictOptions({ dict })).rows
-      // TODO why concat not working
-      dictOptions.concat(rows)
-    } else {
-      /* TODO */
-    }
+    success(res, (await model.getDepts(removeNullProps({ keyword, type })).rows))
   } catch (e) {
-    return fail(res, e.message)
+    fail(res, e.message)
   }
-
-  success(res, dictOptions)
 }

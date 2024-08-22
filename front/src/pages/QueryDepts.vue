@@ -26,22 +26,27 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import { SelectOption } from 'src/types'
+import { SelectOption, Dept } from 'src/types'
 import { api } from 'boot/axios'
 import { showNotification, showErrorRespNotification } from 'src/utils/notifications'
 
 const keyword = ref('')
 const selectedType = ref<string | null>(null)
-const departments = ref<Array<{id: number, name: string, type: string, description: string}>>([])
+const departments = ref<Array<Dept>>([{ area_name: '主院区', name: '妇科门诊', addr: '门诊大楼1楼',
+    type_name: '门诊(3)', phone: '18986145582', sup_dept_name: '妇科' },
+  { area_name: '光顾院区', name: '妇科门诊', addr: '门诊大楼1楼',
+    type_name: '门诊(3)', phone: '18674016509', sup_dept_name: '妇科' } ])
 const loading = ref(false)
 
 const departmentTypes = ref<SelectOption[]>([])
 
 const columns = [
-  { name: 'id', label: 'ID', field: 'id', sortable: true },
-  { name: 'name', label: 'Department Name', field: 'name', sortable: true },
-  { name: 'type', label: 'Type', field: 'type', sortable: true },
-  { name: 'description', label: 'Description', field: 'description' },
+  { name: 'area_name', label: '院区', field: 'arae_name', sortable: true },
+  { name: 'name', label: '名称', field: 'name', sortable: true },
+  { name: 'addr', label: '地址', field: 'addr', sortable: true },
+  { name: 'type_name', label: '类型', field: 'type_name' },
+  { name: 'phone', label: '电话', field: 'phone' },
+  { name: 'sup_dept_name', label: '上级科室', field: 'sup_dept_name' }
 ]
 
 const filter = computed(() => {
@@ -54,15 +59,13 @@ const filter = computed(() => {
 const searchDepartments = async () => {
   loading.value = true
   try {
-    // Simulating API call
-    await new Promise(resolve => setTimeout(resolve, 1000))
-    departments.value = [
-      { id: 1, name: 'General Surgery', type: 'surgery', description: 'Surgical procedures' },
-      { id: 2, name: 'Cardiology', type: 'internal', description: 'Heart-related issues' },
-      { id: 3, name: 'Pediatric Oncology', type: 'pediatrics', description: 'Cancer treatment for children' },
-    ]
-  } catch (error) {
-    console.error('Error fetching departments:', error)
+    const resp = await api.get('/depts',
+      { params: { keyword: keyword.value, type: selectedType.value } })
+    console.log(resp.data?.data)
+    departments.value.push(...resp.data?.data)
+    console.log(departments.value)
+  } catch (error: any) {
+    showNotification(error.message, 'negative')
   } finally {
     loading.value = false
   }
