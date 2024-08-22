@@ -15,7 +15,7 @@
     </div>
 
     <div class="q-mt-lg">
-      <q-table :rows="departments" :columns="columns" row-key="id" :loading="loading" :filter="filter">
+      <q-table :rows="departments" :columns="columns" row-key="id" :loading="loading">
         <template v-slot:loading>
           <q-inner-loading showing color="primary" />
         </template>
@@ -32,16 +32,13 @@ import { showNotification, showErrorRespNotification } from 'src/utils/notificat
 
 const keyword = ref('')
 const selectedType = ref<string | null>(null)
-const departments = ref<Array<Dept>>([{ area_name: '主院区', name: '妇科门诊', addr: '门诊大楼1楼',
-    type_name: '门诊(3)', phone: '18986145582', sup_dept_name: '妇科' },
-  { area_name: '光顾院区', name: '妇科门诊', addr: '门诊大楼1楼',
-    type_name: '门诊(3)', phone: '18674016509', sup_dept_name: '妇科' } ])
+const departments = ref<Array<Dept>>([])
 const loading = ref(false)
 
 const departmentTypes = ref<SelectOption[]>([])
 
 const columns = [
-  { name: 'area_name', label: '院区', field: 'arae_name', sortable: true },
+  { name: 'area_name', label: '院区', field: 'area_name', sortable: true },
   { name: 'name', label: '名称', field: 'name', sortable: true },
   { name: 'addr', label: '地址', field: 'addr', sortable: true },
   { name: 'type_name', label: '类型', field: 'type_name' },
@@ -62,7 +59,7 @@ const searchDepartments = async () => {
     const resp = await api.get('/depts',
       { params: { keyword: keyword.value, type: selectedType.value } })
     console.log(resp.data?.data)
-    departments.value.push(...resp.data?.data)
+    departments.value = resp.data?.data
     console.log(departments.value)
   } catch (error: any) {
     showNotification(error.message, 'negative')
