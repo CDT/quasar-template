@@ -69,8 +69,8 @@ getParam = (req, paramName) => req.query[paramName] || req.params[paramName] || 
 exports.getParam = getParam
 
 
-exports.success = (response, data) => {
-  response.status(200).json({success: true, data})
+exports.success = (response, data, additionalData) => {
+  response.status(200).json({success: true, data, ...additionalData})
 }
 
 fail = (response, error, httpErrorCode=500, addon) => {

@@ -15,7 +15,8 @@ module.exports = configure(function () {
       vueRouterMode: 'history',
       env: {
         PROJECT_NAME: 'Quasar项目',
-        API_BASE: 'http://localhost:3001/api'
+        API_BASE: 'http://localhost:3001/api',
+        PER_PAGE: 10
       }
     },
     devServer: {

@@ -38,7 +38,7 @@ exports.getDepts = async (req, res) => {
   const { keyword, type } = req.query
 
   // MOCK数据
-  if (MOCK) return success(res, MOCK_DEPTS_DATA)
+  if (MOCK) return success(res, MOCK_DEPTS_DATA, { total: 2 })
 
   try {
     success(res, (await model.getDepts(removeNullProps({ keyword, type })).rows))

@@ -10,12 +10,15 @@
         <q-select v-model="selectedType" :options="departmentTypes" label="科室类型" outlined emit-value map-options />
       </div>
       <div class="col-12 col-md-2 self-center">
-        <q-btn color="primary" icon="search" @click="searchDepartments" />
+        <q-btn color="primary" icon="search" @click="searchDepartments(pagination.page)" />
       </div>
     </div>
 
     <div class="q-mt-lg">
-      <q-table :rows="departments" :columns="columns" row-key="id" :loading="loading">
+      <q-table :rows="departments"
+        :columns="columns" row-key="id"
+        :loading="loading" :pagination="pagination"
+        @request="onRequest">
         <template v-slot:loading>
           <q-inner-loading showing color="primary" />
         </template>
@@ -25,25 +28,30 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, reactive } from 'vue'
 import { SelectOption, Dept } from 'src/types'
 import { api } from 'boot/axios'
 import { showNotification, showErrorRespNotification } from 'src/utils/notifications'
+import { QTableColumn } from 'quasar'
 
 const keyword = ref('')
 const selectedType = ref<string | null>(null)
 const departments = ref<Array<Dept>>([])
 const loading = ref(false)
-
+const pagination = reactive<any>({
+  rowsPerPage: parseInt(process.env.PER_PAGE!),
+  page: 1,
+  rowsNumber: 0
+})
 const departmentTypes = ref<SelectOption[]>([])
 
-const columns = [
-  { name: 'area_name', label: '院区', field: 'area_name', sortable: true },
-  { name: 'name', label: '名称', field: 'name', sortable: true },
-  { name: 'addr', label: '地址', field: 'addr', sortable: true },
-  { name: 'type_name', label: '类型', field: 'type_name' },
-  { name: 'phone', label: '电话', field: 'phone' },
-  { name: 'sup_dept_name', label: '上级科室', field: 'sup_dept_name' }
+const columns: QTableColumn[] = [
+  { name: 'area_name', label: '院区', field: 'area_name', sortable: true, align: 'center' },
+  { name: 'name', label: '名称', field: 'name', sortable: true, align: 'center' },
+  { name: 'addr', label: '地址', field: 'addr', sortable: true, align: 'center' },
+  { name: 'type_name', label: '类型', field: 'type_name', align: 'center' },
+  { name: 'phone', label: '电话', field: 'phone', align: 'center' },
+  { name: 'sup_dept_name', label: '上级科室', field: 'sup_dept_name', align: 'center' }
 ]
 
 const filter = computed(() => {
@@ -53,19 +61,31 @@ const filter = computed(() => {
   }
 })
 
-const searchDepartments = async () => {
+const searchDepartments = async (page = 1) => {
   loading.value = true
   try {
     const resp = await api.get('/depts',
-      { params: { keyword: keyword.value, type: selectedType.value } })
-    console.log(resp.data?.data)
+      { params: {
+          keyword: keyword.value,
+          type: selectedType.value,
+          page: page,
+          per_page: pagination.rowsPerPage
+        }
+      })
     departments.value = resp.data?.data
-    console.log(departments.value)
+    pagination.page = page
+    pagination.rowsNumber = resp.data?.total || 0
+    console.log(pagination)
   } catch (error: any) {
     showNotification(error.message, 'negative')
   } finally {
     loading.value = false
   }
+}
+
+const onRequest = (props: any) => {
+  const { page } = props.pagination
+  searchDepartments(page)
 }
 
 // 初始化数据
