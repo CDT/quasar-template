@@ -17,7 +17,7 @@
     <div class="q-mt-lg">
       <q-table :rows="departments"
         :columns="columns" row-key="id"
-        :loading="loading" :pagination="pagination"
+        :loading="loading" v-model:pagination="pagination"
         @request="onRequest">
         <template v-slot:loading>
           <q-inner-loading showing color="primary" />
@@ -28,7 +28,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, reactive } from 'vue'
+import { ref, computed } from 'vue'
 import { SelectOption, Dept } from 'src/types'
 import { api } from 'boot/axios'
 import { showNotification, showErrorRespNotification } from 'src/utils/notifications'
@@ -38,7 +38,7 @@ const keyword = ref('')
 const selectedType = ref<string | null>(null)
 const departments = ref<Array<Dept>>([])
 const loading = ref(false)
-const pagination = reactive<any>({
+const pagination = ref<any>({
   rowsPerPage: parseInt(process.env.PER_PAGE!),
   page: 1,
   rowsNumber: 0
@@ -69,13 +69,12 @@ const searchDepartments = async (page = 1) => {
           keyword: keyword.value,
           type: selectedType.value,
           page: page,
-          per_page: pagination.rowsPerPage
+          per_page: pagination.value.rowsPerPage
         }
       })
     departments.value = resp.data?.data
-    pagination.page = page
-    pagination.rowsNumber = resp.data?.total || 0
-    console.log(pagination)
+    pagination.value.page = page
+    pagination.value.rowsNumber = resp.data?.total || 0
   } catch (error: any) {
     showNotification(error.message, 'negative')
   } finally {
