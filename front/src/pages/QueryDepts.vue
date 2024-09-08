@@ -38,7 +38,7 @@
     </div>
 
     <!-- Detail Dialog -->
-    <q-dialog v-model="detailDialog" persistent>
+    <q-dialog v-model="detailDialog">
       <q-card style="min-width: 350px">
         <q-card-section>
           <div class="text-h6">科室详情</div>
