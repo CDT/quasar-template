@@ -39,28 +39,22 @@
 
     <!-- Detail Dialog -->
     <q-dialog v-model="detailDialog">
-      <q-card style="min-width: 350px">
+      <q-card style="min-width: 800px">
         <q-card-section>
           <div class="text-h6">科室详情</div>
         </q-card-section>
 
         <q-card-section class="q-pt-none">
-          <q-table
-            :rows="[selectedDepartment]"
-            :columns="detailColumns"
-            hide-bottom
-            hide-header
-            flat
-            bordered
-          >
-            <template v-slot:body="props">
-              <q-tr :props="props">
-                <q-td v-for="col in props.cols" :key="col.name" :props="props">
-                  <strong>{{ col.label }}:</strong> {{ col.value }}
-                </q-td>
-              </q-tr>
-            </template>
-          </q-table>
+          <div class="row q-col-gutter-md">
+            <div class="col-12 col-sm-6 col-md-4" v-for="(field, index) in detailFields" :key="index">
+              <q-item>
+                <q-item-section>
+                  <q-item-label overline>{{ field.label }}</q-item-label>
+                  <q-item-label>{{ (selectedDepartment as any)[field.value] }}</q-item-label>
+                </q-item-section>
+              </q-item>
+            </div>
+          </div>
         </q-card-section>
 
         <q-card-actions align="right" class="text-primary">
@@ -113,6 +107,15 @@ const dataColumns: QTableColumn[] = [
   { name: 'phone', label: '电话', field: 'phone', align: 'center' },
   { name: 'sup_dept_name', label: '上级科室', field: 'sup_dept_name', align: 'center' },
   { name: 'actions', label: '操作', field: 'actions', align: 'center' }
+]
+
+const detailFields = [
+  { label: '院区', value: 'area_name' },
+  { label: '名称', value: 'name' },
+  { label: '地址', value: 'addr' },
+  { label: '类型', value: 'type_name' },
+  { label: '电话', value: 'phone' },
+  { label: '上级科室', value: 'sup_dept_name' }
 ]
 
 const searchDepartments = async (props?: any) => {
