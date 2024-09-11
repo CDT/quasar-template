@@ -29,7 +29,7 @@
             <div class="q-pa-md q-gutter-sm">
               <q-btn color="info" outline icon="info" size="sm" @click="showDetails(props.row)" />
               <q-btn color="primary" outline icon="edit" size="sm" @click="console.log(props.row)" />
-              <q-btn color="negative" outline icon="delete" size="sm" @click="console.log(props.row)" />
+              <q-btn color="negative" outline icon="delete" size="sm" @click="deleteDepartment(props.row)" />
             </div>
           </q-td>
         </template>
@@ -39,24 +39,37 @@
 
     <!-- Detail Dialog -->
     <q-dialog v-model="detailDialog">
-      <q-card style="min-width: 800px">
+      <q-card style="min-width: 1000px">
         <q-card-section>
-          <div class="text-h6">科室详情</div>
+          <q-tabs v-model="activeTab" class="text-primary">
+            <q-tab name="tab1" label="基本信息" />
+            <q-tab name="tab2" label="Tab 2" />
+            <q-tab name="tab3" label="Tab 3" />
+          </q-tabs>
+          <q-separator />
+          <q-tab-panels v-model="activeTab" animated>
+            <q-tab-panel name="tab1">
+              <div class="row q-col-gutter-md">
+                <div class="col-12 col-sm-6 col-md-4" v-for="(field, index) in detailFields" :key="index">
+                  <q-item>
+                    <q-item-section>
+                      <q-item-label overline>{{ field.label }}</q-item-label>
+                      <q-item-label>{{ (selectedDepartment as any)[field.value] }}</q-item-label>
+                    </q-item-section>
+                  </q-item>
+                </div>
+              </div>
+            </q-tab-panel>
+            <q-tab-panel name="tab2">
+              <!-- Content for Tab 2 -->
+              <div>Content for Tab 2</div>
+            </q-tab-panel>
+            <q-tab-panel name="tab3">
+              <!-- Content for Tab 3 -->
+              <div>Content for Tab 3</div>
+            </q-tab-panel>
+          </q-tab-panels>
         </q-card-section>
-
-        <q-card-section class="q-pt-none">
-          <div class="row q-col-gutter-md">
-            <div class="col-12 col-sm-6 col-md-4" v-for="(field, index) in detailFields" :key="index">
-              <q-item>
-                <q-item-section>
-                  <q-item-label overline>{{ field.label }}</q-item-label>
-                  <q-item-label>{{ (selectedDepartment as any)[field.value] }}</q-item-label>
-                </q-item-section>
-              </q-item>
-            </div>
-          </div>
-        </q-card-section>
-
         <q-card-actions align="right" class="text-primary">
           <q-btn flat label="关闭" v-close-popup />
         </q-card-actions>
@@ -85,6 +98,7 @@ const pagination = ref<any>({
 })
 const departmentTypes = ref<SelectOption[]>([])
 const detailDialog = ref(false)
+const activeTab = ref('tab1')
 const selectedDepartment = ref<Dept | null>(null)
 
 const detailColumns: QTableColumn[] = [
@@ -147,6 +161,32 @@ const searchDepartments = async (props?: any) => {
 const showDetails = (dept: Dept) => {
   selectedDepartment.value = dept
   detailDialog.value = true
+}
+
+const deleteDepartment = (row: Dept) => {
+  if (confirm('Are you sure you want to delete this department?')) {
+    // Make a POST request to delete the department
+    fetch(`/api/deleteDepartment`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ code: row.code }),
+    })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          alert('Department deleted successfully');
+          searchDepartments(); // Refresh the table
+        } else {
+          alert('Failed to delete department');
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        alert('An error occurred while deleting the department');
+      });
+  }
 }
 
 // 初始化数据
