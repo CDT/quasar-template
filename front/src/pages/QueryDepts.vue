@@ -84,7 +84,7 @@ import { ref, computed } from 'vue'
 import { SelectOption, Dept } from 'src/types'
 import { api } from 'boot/axios'
 import { showNotification, showErrorRespNotification } from 'src/utils/notifications'
-import { QTableColumn } from 'quasar'
+import { QTableColumn, Dialog } from 'quasar'
 
 const keyword = ref('')
 const selectedType = ref<string | null>(null)
@@ -164,29 +164,27 @@ const showDetails = (dept: Dept) => {
 }
 
 const deleteDepartment = (row: Dept) => {
-  if (confirm('Are you sure you want to delete this department?')) {
-    // Make a POST request to delete the department
-    fetch(`/api/deleteDepartment`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ code: row.code }),
-    })
-      .then(response => response.json())
-      .then(data => {
-        if (data.success) {
-          alert('Department deleted successfully');
-          searchDepartments(); // Refresh the table
-        } else {
-          alert('Failed to delete department');
-        }
-      })
-      .catch(error => {
-        console.error('Error:', error);
-        alert('An error occurred while deleting the department');
-      });
-  }
+  Dialog.create({
+    title: '确认删除',
+    message: '确定要删除吗？',
+    focus: 'cancel',
+    persistent: true,
+    ok: {
+      label: '确定',
+      flat: true,
+      color: 'negative'
+    },
+    cancel: '取消'
+  }).onOk(() => {
+    // User clicked OK
+    console.log('OK')
+  }).onCancel(() => {
+    // User clicked Cancel
+    console.log('Cancel')
+  }).onDismiss(() => {
+    // Dialog was dismissed
+    console.log('Dismissed')
+  })
 }
 
 // 初始化数据

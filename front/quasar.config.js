@@ -24,7 +24,7 @@ module.exports = configure(function () {
     },
     framework: {
       config: {},
-      plugins: ['Notify', 'Loading']
+      plugins: ['Notify', 'Loading', 'Dialog']
     },
     animations: [],
     ssr: {
