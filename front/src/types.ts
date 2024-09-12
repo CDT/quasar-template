@@ -24,7 +24,7 @@ export interface SelectOption {
 export interface Dept {
   code?: string,
   area_name?: string,
-  name: string
+  name?: string
   addr?: string
   type_name?: string
   phone?: string
