@@ -25,8 +25,9 @@ export interface Dept {
   code?: string,
   area_name?: string,
   name?: string
-  addr?: string
+  address?: string
   type_name?: string
   phone?: string
-  sup_dept_name?: string
+  parent_org_name?: string
+  enabled?: boolean
 }

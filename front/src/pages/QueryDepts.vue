@@ -4,13 +4,13 @@
     <!-- 搜索栏 -->
     <div class="row q-col-gutter-md q-px-md justify-center">
       <div class="col-6 col-md-3">
-        <q-input v-model="keyword" label="关键字" outlined @keyup.enter="searchDepartments"></q-input>
+        <q-input v-model="keyword" label="关键字" outlined @keyup.enter="searchDepartments" clearable />
       </div>
       <div class="col-6 col-md-3">
-        <q-select v-model="selectedType" :options="departmentTypes" label="科室类型" outlined emit-value map-options />
+        <q-select v-model="selectedType" :options="departmentTypes" label="科室类型" outlined emit-value map-options clearable />
       </div>
       <div class="col-2 self-center">
-        <q-btn color="primary" icon="search" @click="searchDepartments" />
+        <q-btn color="primary" icon="search" @click="searchDepartments()" />
       </div>
     </div>
 
@@ -19,9 +19,14 @@
         :columns="dataColumns" row-key="id"
         :loading="loading" v-model:pagination="pagination"
         @request="searchDepartments">
-        <!-- Loading -->
-        <template v-slot:loading>
-          <q-inner-loading showing color="primary" />
+
+        
+        <template v-slot:body-cell-status="props">
+          <q-td :props="props">
+            <q-badge :color="getStatusLabel(props.row.enabled).color">
+              {{ getStatusLabel(props.row.enabled).text }}
+            </q-badge>
+          </q-td>
         </template>
 
         <template v-slot:body-cell-actions="props">
@@ -130,7 +135,7 @@
               </div>
               <div class="col-12 col-sm-6 col-md-4">
                 <q-select
-                  v-model="selectedDepartment.sup_dept_name"
+                  v-model="selectedDepartment.parent_org_name"
                   :options="departmentOptions"
                   label="上级科室"
                   filled
@@ -138,7 +143,7 @@
               </div>
               <div class="col-12">
                 <q-input
-                  v-model="selectedDepartment.addr"
+                  v-model="selectedDepartment.address"
                   label="地址"
                   filled
                 />
@@ -183,10 +188,11 @@ const dataColumns: QTableColumn[] = [
   { name: 'code', label: '编码', field: 'code', align: 'left' },
   { name: 'area_name', label: '院区', field: 'area_name', sortable: true, align: 'center' },
   { name: 'name', label: '名称', field: 'name', sortable: true, align: 'center' },
-  { name: 'addr', label: '地址', field: 'addr', sortable: true, align: 'center' },
+  { name: 'status', label: '状态', field: 'enabled', align: 'center' },
+  { name: 'address', label: '地址', field: 'address', sortable: true, align: 'center' },
   { name: 'type_name', label: '类型', field: 'type_name', align: 'center' },
   { name: 'phone', label: '电话', field: 'phone', align: 'center' },
-  { name: 'sup_dept_name', label: '上级科室', field: 'sup_dept_name', align: 'center' },
+  { name: 'sup_dept_name', label: '上级科室', field: 'parent_org_name', align: 'center' },
   { name: 'actions', label: '操作', field: 'actions', align: 'center' }
 ]
 
@@ -194,7 +200,7 @@ const detailFields = [
   { label: '编码', value: 'code' },
   { label: '院区', value: 'area_name' },
   { label: '名称', value: 'name' },
-  { label: '地址', value: 'addr' },
+  { label: '地址', value: 'address' },
   { label: '类型', value: 'type_name' },
   { label: '电话', value: 'phone' },
   { label: '上级科室', value: 'sup_dept_name' }
@@ -205,23 +211,19 @@ const departmentOptions = ref<any>([])
 
 const searchDepartments = async (props?: any) => {
   loading.value = true
+  const { page, rowsPerPage, sortBy } = props?.pagination || pagination.value
   try {
-    const resp = await api.get('/depts',
-      {
-        params: {
-          keyword: keyword.value,
-          type: selectedType.value,
-          page: pagination.value.page,
-          per_page: pagination.value.rowsPerPage,
-          sort_by: pagination.value.sortBy
-        }
-      })
-    departments.value = resp.data?.data || []
-    // update local pagination object
-    if (props?.pagination) {
-      pagination.value = { ...props.pagination }
-    }
-    pagination.value.rowsNumber = resp.data?.total || 0
+    const { data } = await api.get('/depts', {
+      params: {
+        keyword: keyword.value,
+        type: selectedType.value,
+        page,
+        per_page: rowsPerPage,
+        sort_by: sortBy
+      }
+    })
+    departments.value = data?.data?.rows || []
+    pagination.value = { ...pagination.value, ...props?.pagination, rowsNumber: data?.data?.total || 0 }
   } catch (error: any) {
     showNotification(error.message, 'negative')
   } finally {
@@ -266,6 +268,16 @@ const deleteDepartment = (row: Dept) => {
 const handleSave = () => {
   console.log('Save', selectedDepartment.value)
   isEditDialogVisible.value = false
+}
+
+const getStatusLabel = (enabled: string) => {
+  if (enabled === '0') {
+    return { text: '已禁用', color: 'red' }
+  } else if (enabled === '1') {
+    return { text: '正常', color: 'green' }
+  } else {
+    return { text: '未知', color: 'gray' }
+  }
 }
 
 // 初始化数据

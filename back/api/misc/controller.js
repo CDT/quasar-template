@@ -41,7 +41,19 @@ exports.getDepts = async (req, res) => {
   if (MOCK) return success(res, MOCK_DEPTS_DATA, { total: 2 })
 
   try {
-    success(res, (await model.getDepts(removeNullProps({ keyword, type, page, per_page })).rows))
+    const result = (
+      await model.getDepts(
+        removeNullProps({
+          keyword,
+          keyword_padded: keyword && '%' + keyword + '%',
+          type,
+          page: parseInt(page, 10),
+          pagesize: parseInt(per_page, 10)
+        })
+      )
+    )
+
+    success(res, result)
   } catch (e) {
     fail(res, e.message)
   }

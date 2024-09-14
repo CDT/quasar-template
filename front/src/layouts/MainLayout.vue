@@ -65,10 +65,10 @@ const linksList: EssentialLinkProps[] = [
     link: '/query/depts'
   },
   {
-    title: '员工检索',
-    caption: '员工基本信息检索',
+    title: 'Handsontable示例',
+    caption: '一个基于Vue3的Handsontable示例',
     icon: 'account_box',
-    link: '/query/emps'
+    link: '/demo/handsontable'
   }
 ]
 

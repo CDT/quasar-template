@@ -8,6 +8,7 @@ fileLogger = log4js.getLogger('file')
 
 // 初始化Oracle
 exports.initOracle = () => {
+  oracledb.initOracleClient() // Enable Thick mode
   DBS.forEach(DB => {
     oracledb.createPool(DB,
       (err, pool) => {
@@ -71,8 +72,8 @@ const getPagedResult = (sql, params) => {
     result_sql = `select * from 
             (select result.*, rownum rnum from
               (${sql}) result
-              where rownum <= (:page+1) * :pagesize)
-            where rnum > :page * :pagesize`
+              where rownum <= :page * :pagesize)
+            where rnum > (:page - 1) * :pagesize`
     total_sql = `select count(1) total from (${sql})`
       
     try {
@@ -83,6 +84,9 @@ const getPagedResult = (sql, params) => {
       delete params.page
       delete params.pagesize          
       result.total = (await execute(total_sql, params)).rows[0].TOTAL
+
+      // 删除没用的metaData属性
+      delete result.metaData
 
       resolve(result)
     } catch (e) {
