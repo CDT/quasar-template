@@ -35,13 +35,13 @@ exports.getOptions = async (req, res) => {
 
 exports.getDepts = async (req, res) => {
  
-  const { keyword, type } = req.query
+  const { keyword, type, page, per_page } = req.query
 
   // MOCK数据
   if (MOCK) return success(res, MOCK_DEPTS_DATA, { total: 2 })
 
   try {
-    success(res, (await model.getDepts(removeNullProps({ keyword, type })).rows))
+    success(res, (await model.getDepts(removeNullProps({ keyword, type, page, per_page })).rows))
   } catch (e) {
     fail(res, e.message)
   }

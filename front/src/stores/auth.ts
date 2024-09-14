@@ -11,7 +11,7 @@ export const useAuthStore = defineStore('auth', {
   }),
 
   actions: {
-    async login(credentials: Credentials): Promise<void> {
+    async login (credentials: Credentials): Promise<void> {
       try {
         const response = await api.post('/login', credentials)
         this.token = response.data.data.token
@@ -37,8 +37,13 @@ export const useAuthStore = defineStore('auth', {
     async initializeAuth() {
       const token = localStorage.getItem('token')
       if (token) {
-        await this.login({ token })
-        const authStore = useAuthStore()
+        try {
+          await this.login({ token })
+        } catch (error: any) {
+          if (error.response?.status === 401) {
+            this.logout()
+          }
+        }
       }
     }
 

@@ -31,18 +31,10 @@ function execute (statement, binds = {}, opts = {}) {
       const result = await conn.execute(statement, binds, opts)
       resolve(result)
     } catch (err) {
-      console.trace(err)
-      console.error('问题SQL: ' + statement)
+      logger.error('问题SQL: ' + statement, binds)
       reject(err)
     } finally {
-      if (conn) {
-        try {
-          await conn.close()
-        } catch (err) {
-          logger.error(err)
-          reject(err)
-        }
-      }
+      conn && await conn.close()
     }
   })
 }
@@ -74,7 +66,7 @@ function trans (statements) {
 }
 exports.trans = trans
 
-exports.getPagedResult = (sql, params) => {
+const getPagedResult = (sql, params) => {
   return new Promise(async (resolve, reject) => {
     result_sql = `select * from 
             (select result.*, rownum rnum from
@@ -82,22 +74,30 @@ exports.getPagedResult = (sql, params) => {
               where rownum <= (:page+1) * :pagesize)
             where rnum > :page * :pagesize`
     total_sql = `select count(1) total from (${sql})`
-    let error
-    let result = await execute(result_sql, params).catch(err => {error = err; console.trace(err); return reject(err); })
-    if (error) return reject(error)
-    
-    // 查询总数
-    delete params.page; delete params.pagesize // 查询总数时，先删除分页参数
-    total = await execute(total_sql, params).catch(err => {error = err; console.trace(err); return reject(err); })
-    if (error) return reject(error)
-    total = total.rows[0].TOTAL 
-  
-    
-    result.total = total
-    resolve(result)
+      
+    try {
+      let result = await execute(result_sql, params)
+      
+      // 查询总数
+      // 查询总数前，删除分页参数
+      delete params.page
+      delete params.pagesize          
+      result.total = (await execute(total_sql, params)).rows[0].TOTAL
+
+      resolve(result)
+    } catch (e) {
+      reject(e)
+    }
   })
 }
+exports.getPagedResult = getPagedResult
 
+exports.query = (sql, params) => {
+  if (params.page) {
+    return getPagedResult(sql, params)
+  }
+  return execute(sql, params)
+}
 // close oracle
 closeOracle = async function () {
   await oracledb.getPool().close()

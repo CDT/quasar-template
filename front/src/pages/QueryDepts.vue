@@ -2,14 +2,14 @@
   <q-page padding>
 
     <!-- 搜索栏 -->
-    <div class="row q-col-gutter-md q-px-md">
-      <div class="col-12 col-md-5">
+    <div class="row q-col-gutter-md q-px-md justify-center">
+      <div class="col-6 col-md-3">
         <q-input v-model="keyword" label="关键字" outlined @keyup.enter="searchDepartments"></q-input>
       </div>
-      <div class="col-12 col-md-5">
+      <div class="col-6 col-md-3">
         <q-select v-model="selectedType" :options="departmentTypes" label="科室类型" outlined emit-value map-options />
       </div>
-      <div class="col-12 col-md-2 self-center">
+      <div class="col-2 self-center">
         <q-btn color="primary" icon="search" @click="searchDepartments" />
       </div>
     </div>
@@ -157,7 +157,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref } from 'vue'
 import { SelectOption, Dept } from 'src/types'
 import { api } from 'boot/axios'
 import { showNotification, showErrorRespNotification } from 'src/utils/notifications'
@@ -165,7 +165,7 @@ import { QTableColumn, Dialog } from 'quasar'
 
 const keyword = ref('')
 const selectedType = ref<string | null>(null)
-const departments = ref<Array<Dept>>([])
+const departments = ref<Dept[]>([])
 const loading = ref(false)
 const pagination = ref<any>({
   rowsPerPage: parseInt(process.env.PER_PAGE!),
@@ -216,7 +216,7 @@ const searchDepartments = async (props?: any) => {
           sort_by: pagination.value.sortBy
         }
       })
-    departments.value = resp.data?.data
+    departments.value = resp.data?.data || []
     // update local pagination object
     if (props?.pagination) {
       pagination.value = { ...props.pagination }

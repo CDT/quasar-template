@@ -9,9 +9,9 @@ exports.MAIL_PASSWORD = '!qaz2wsx'
 
 // TOKEN:
 exports.TOKEN_KEY = 'TONGJIYIYUAN123'
-exports.TOKEN_EXPIRATION_TIME = '24h'
+exports.TOKEN_EXPIRATION_TIME = '7d'
 
 // GENERAL:
-exports.MOCK = true // 本地测试
+exports.MOCK = false // 本地测试
 exports.MULTI_SERVER = false
 exports.PORT = 3001
