@@ -70,8 +70,13 @@
     </q-drawer>
 
     <q-page-container>
-      <router-view />
+      <router-view v-slot="{ Component }">
+        <keep-alive :max="MAX_CACHED_ROUTES">
+          <component :is="Component" :key="$route.fullPath" />
+        </keep-alive>
+      </router-view>
     </q-page-container>
+
   </q-layout>
 </template>
 
@@ -79,10 +84,11 @@
 import { ref, computed } from 'vue'
 import { EssentialLinkProps } from 'src/types'
 import { useAuthStore } from 'src/stores/auth'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 
 const authStore = useAuthStore()
 const router = useRouter()
+const route = useRoute()
 
 defineOptions({
   name: 'MainLayout'
@@ -105,22 +111,39 @@ const linksList: EssentialLinkProps[] = [
       link: '/demo/handsontable'
     }, {
       title: '示例2',
-      icon: 'account_box'
+      icon: 'account_box',
+      link: '/demo/handsontable2'
     }] 
   }
 ]
 
+const MAX_CACHED_ROUTES = parseInt(process.env.MAX_CACHED_ROUTES as string)
+
 const filteredLinks = computed(() => {
   return linksList.filter( (link: EssentialLinkProps) => {
+    if (link.children) {
+      link.children = link.children.filter( (childLink: EssentialLinkProps) => {
+        if (!childLink.link) return true
+        const route = router.resolve(childLink.link)
+        const allowedRoles = route.meta.allowedRoles as string[] || []
+
+        // If no roles are required, show the link
+        if (allowedRoles.length === 0) return true
+
+        // Check if user has at least one of the required roles
+        return authStore.user?.roles.some(role => allowedRoles.includes(role))
+      })
+    }
     
+    if (!link.link) return true
     const route = router.resolve(link.link)
-    const requiredRoles = route.meta.requiredRoles as string[] || []
+    const allowedRoles = route.meta.allowedRoles as string[] || []
 
     // If no roles are required, show the link
-    if (requiredRoles.length === 0) return true
+    if (allowedRoles.length === 0) return true
 
     // Check if user has at least one of the required roles
-    return authStore.user?.roles.some(role => requiredRoles.includes(role))
+    return authStore.user?.roles.some(role => allowedRoles.includes(role))
   })
 })
 

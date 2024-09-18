@@ -168,6 +168,10 @@ import { api } from 'boot/axios'
 import { showNotification, showErrorRespNotification } from 'src/utils/notifications'
 import { QTableColumn, Dialog } from 'quasar'
 
+defineOptions({
+  name: 'QueryDepts'
+})
+
 const keyword = ref('')
 const selectedType = ref<string | null>(null)
 const departments = ref<Dept[]>([])

@@ -16,7 +16,8 @@ module.exports = configure(function () {
       env: {
         PROJECT_NAME: 'Quasar项目',
         API_BASE: 'http://localhost:3001/api',
-        PER_PAGE: 10
+        PER_PAGE: 10,
+        MAX_CACHED_ROUTES: 6
       }
     },
     devServer: {

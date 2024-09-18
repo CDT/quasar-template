@@ -37,11 +37,11 @@ export default route(function (/* { store, ssrContext } */) {
   Router.beforeEach((to, from, next) => {
     const authStore = useAuthStore()
     const requiresAuth = to.matched.some(record => record.meta.requiresAuth)
-    const requiredRoles = to.meta.requiredRoles as string[] || []
+    const allowedRoles = to.meta.allowedRoles as string[] || []
 
     if (requiresAuth && !authStore.isAuthenticated) {
       next('/login')
-    } else if (requiredRoles.length > 0 && !requiredRoles.some(role => authStore.user?.roles.includes(role))) {
+    } else if (allowedRoles.length > 0 && !allowedRoles.some(role => authStore.user?.roles.includes(role))) {
       next('/error/401?message=无权限')
     } else {
       next()

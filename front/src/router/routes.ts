@@ -23,7 +23,7 @@ const routes: RouteRecordRaw[] = [
       component: () => import('pages/HandsontableDemo.vue'),
       meta: {
         requiresAuth: true,
-        requiredRoles: ['admin', 'doc'],
+        allowedRoles: ['admin', 'doc'],
         name: 'Handsontable示例'
       }
     }],
