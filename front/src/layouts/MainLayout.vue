@@ -50,8 +50,9 @@
 
           <!-- 带子菜单的 -->
           <q-expansion-item v-else :icon="link.icon" :label="link.title" :caption="link.caption">
-            <q-list>
-              <q-item v-for="childLink in link.children" :key="childLink.title" clickable :to="childLink.link" exact v-bind="childLink">
+            <q-list class="q-pl-md">
+              <q-item v-for="childLink in link.children" :key="childLink.title" 
+                clickable :to="childLink.link" exact v-bind="childLink" class="q-pl-md">
                 <q-item-section v-if="childLink.icon" avatar>
                   <q-icon :name="childLink.icon" />
                 </q-item-section>
@@ -105,13 +106,13 @@ const linksList: EssentialLinkProps[] = [
     }, {
       title: '示例2',
       icon: 'account_box'
-    }]    
+    }] 
   }
 ]
 
 const filteredLinks = computed(() => {
   return linksList.filter( (link: EssentialLinkProps) => {
-    if (!link.link) return false
+    
     const route = router.resolve(link.link)
     const requiredRoles = route.meta.requiredRoles as string[] || []
 
