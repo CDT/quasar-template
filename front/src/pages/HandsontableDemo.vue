@@ -1,5 +1,5 @@
 <template>
-  <h2>如果不使用Handsontable，务必在package.json中移除依赖，并在app.scss中移除handsontable.full.css的依赖</h2>
+  <div>如果不使用Handsontable，务必在package.json中移除依赖</div>
   <hot-table :data="data" :rowHeaders="true" :colHeaders="true" licenseKey="non-commercial-and-evaluation"></hot-table>
 </template>
 

@@ -1,11 +1,11 @@
-<template>
+<<template>
   <q-layout view="lHh Lpr lFf">
     <q-header elevated>
       <q-toolbar>
         <q-btn flat dense round icon="menu" aria-label="Menu" @click="toggleLeftDrawer" />
 
         <q-toolbar-title>
-          <router-link to="/"  class="text-white text-no-decoration">
+          <router-link to="/" class="text-white text-no-decoration">
           {{ projectName }}
           </router-link>
           / {{ $route.meta.name }}
@@ -34,7 +34,37 @@
           常用功能
         </q-item-label>
 
-        <EssentialLink v-for="link in filteredLinks" :key="link.title" v-bind="link" />
+        
+        <template v-for="link in filteredLinks" :key="link.title">
+          <!-- 不带子菜单 -->
+          <q-item v-if="!link.children" clickable :to="link.link" exact v-bind="link">
+            <q-item-section v-if="link.icon" avatar>
+              <q-icon :name="link.icon" />
+            </q-item-section>
+
+            <q-item-section>
+              <q-item-label>{{ link.title }}</q-item-label>
+              <q-item-label caption>{{ link.caption }}</q-item-label>
+            </q-item-section>
+          </q-item>
+
+          <!-- 带子菜单的 -->
+          <q-expansion-item v-else :icon="link.icon" :label="link.title" :caption="link.caption">
+            <q-list>
+              <q-item v-for="childLink in link.children" :key="childLink.title" clickable :to="childLink.link" exact v-bind="childLink">
+                <q-item-section v-if="childLink.icon" avatar>
+                  <q-icon :name="childLink.icon" />
+                </q-item-section>
+
+                <q-item-section>
+                  <q-item-label>{{ childLink.title }}</q-item-label>
+                  <q-item-label caption>{{ childLink.caption }}</q-item-label>
+                </q-item-section>
+              </q-item>
+            </q-list>
+          </q-expansion-item>
+        </template>
+
       </q-list>
     </q-drawer>
 
@@ -46,7 +76,7 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import EssentialLink, { EssentialLinkProps } from 'components/EssentialLink.vue'
+import { EssentialLinkProps } from 'src/types'
 import { useAuthStore } from 'src/stores/auth'
 import { useRouter } from 'vue-router'
 
@@ -66,11 +96,24 @@ const linksList: EssentialLinkProps[] = [
   },
   {
     title: 'Handsontable示例',
-    caption: '一个基于Vue3的Handsontable示例',
+    caption: '基于Vue3的Handsontable示例',
     icon: 'account_box',
-    link: '/demo/handsontable'
+    children: [{
+      title: '基本示例',
+      icon: 'account_box',
+      link: '/demo/handsontable'
+    }, {
+      title: '示例2',
+      icon: 'account_box'
+    }]    
   }
 ]
+
+withDefaults(defineProps<EssentialLinkProps>(), {
+  caption: '',
+  link: '#',
+  icon: '',
+})
 
 const filteredLinks = computed(() => {
   return linksList.filter( (link: EssentialLinkProps) => {
@@ -91,7 +134,6 @@ const projectName = process.env.PROJECT_NAME
 
 const toggleLeftDrawer = () => {
   leftDrawerOpen.value = !leftDrawerOpen.value
-  console.log(leftDrawerOpen.value)
 }
 
 const logout = () => {
@@ -99,3 +141,4 @@ const logout = () => {
   router.push('/login')
 }
 </script>
+>

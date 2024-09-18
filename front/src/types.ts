@@ -31,3 +31,16 @@ export interface Dept {
   parent_org_name?: string
   enabled?: boolean
 }
+
+export interface EssentialLinkProps {
+  title: string
+  caption?: string
+  link?: string
+  icon?: string,
+  children?: {
+    title: string
+    caption?: string
+    link?: string
+    icon?: string,
+    }[]
+}
