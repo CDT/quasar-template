@@ -109,12 +109,6 @@ const linksList: EssentialLinkProps[] = [
   }
 ]
 
-withDefaults(defineProps<EssentialLinkProps>(), {
-  caption: '',
-  link: '#',
-  icon: '',
-})
-
 const filteredLinks = computed(() => {
   return linksList.filter( (link: EssentialLinkProps) => {
     if (!link.link) return false
