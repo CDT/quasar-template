@@ -19,12 +19,20 @@ const routes: RouteRecordRaw[] = [
         name: '科室查询'
       }
     }, {
-      path: '/demo/handsontable',
-      component: () => import('pages/HandsontableDemo.vue'),
+      path: '/demo/handsontable1',
+      component: () => import('pages/handsontable/Demo1.vue'),
       meta: {
         requiresAuth: true,
         allowedRoles: ['admin', 'doc'],
-        name: 'Handsontable示例'
+        name: 'Handsontable示例1'
+      }
+    }, {
+      path: '/demo/handsontable2',
+      component: () => import('pages/handsontable/Demo2.vue'),
+      meta: {
+        requiresAuth: true,
+        allowedRoles: ['admin', 'doc'],
+        name: 'Handsontable示例2'
       }
     }],
   },

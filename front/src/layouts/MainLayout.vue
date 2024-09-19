@@ -106,9 +106,9 @@ const linksList: EssentialLinkProps[] = [
     caption: '基于Vue3的Handsontable示例',
     icon: 'account_box',
     children: [{
-      title: '基本示例',
+      title: '示例1',
       icon: 'account_box',
-      link: '/demo/handsontable'
+      link: '/demo/handsontable1'
     }, {
       title: '示例2',
       icon: 'account_box',
