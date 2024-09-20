@@ -34,7 +34,7 @@
           常用功能
         </q-item-label>
 
-        
+
         <template v-for="link in filteredLinks" :key="link.title">
           <!-- 不带子菜单 -->
           <q-item v-if="!link.children" clickable :to="link.link" exact v-bind="link">
@@ -51,7 +51,7 @@
           <!-- 带子菜单的 -->
           <q-expansion-item v-else :icon="link.icon" :label="link.title" :caption="link.caption">
             <q-list class="q-pl-md">
-              <q-item v-for="childLink in link.children" :key="childLink.title" 
+              <q-item v-for="childLink in link.children" :key="childLink.title"
                 clickable :to="childLink.link" exact v-bind="childLink" class="q-pl-md">
                 <q-item-section v-if="childLink.icon" avatar>
                   <q-icon :name="childLink.icon" />
@@ -104,16 +104,16 @@ const linksList: EssentialLinkProps[] = [
   {
     title: 'Handsontable示例',
     caption: '基于Vue3的Handsontable示例',
-    icon: 'account_box',
+    icon: 'grid_view',
     children: [{
       title: '示例1',
-      icon: 'account_box',
+      icon: 'grid_view',
       link: '/demo/handsontable1'
     }, {
       title: '示例2',
-      icon: 'account_box',
+      icon: 'grid_view',
       link: '/demo/handsontable2'
-    }] 
+    }]
   }
 ]
 
@@ -134,7 +134,7 @@ const filteredLinks = computed(() => {
         return authStore.user?.roles.some(role => allowedRoles.includes(role))
       })
     }
-    
+
     if (!link.link) return true
     const route = router.resolve(link.link)
     const allowedRoles = route.meta.allowedRoles as string[] || []
