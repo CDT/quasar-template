@@ -106,13 +106,25 @@ const linksList: EssentialLinkProps[] = [
     caption: '基于Vue3的Handsontable示例',
     icon: 'grid_view',
     children: [{
-      title: '示例1',
+      title: 'Arrays of arrays as data',
       icon: 'grid_view',
       link: '/demo/handsontable1'
     }, {
-      title: '示例2',
+      title: 'Arrays of objects as data',
       icon: 'grid_view',
       link: '/demo/handsontable2'
+    }, {
+      title: 'Use object prop as column',
+      icon: 'grid_view',
+      link: '/demo/handsontable3'
+    }, {
+      title: 'Use data schema',
+      icon: 'grid_view',
+      link: '/demo/handsontable4'
+    }, {
+      title: 'Function data source and schema',
+      icon: 'grid_view',
+      link: '/demo/handsontable5'
     }]
   }
 ]

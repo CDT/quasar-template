@@ -24,7 +24,7 @@ const routes: RouteRecordRaw[] = [
       meta: {
         requiresAuth: true,
         allowedRoles: ['admin', 'doc'],
-        name: 'Handsontable示例1'
+        name: 'Arrays of arrays as data'
       }
     }, {
       path: '/demo/handsontable2',
@@ -32,7 +32,31 @@ const routes: RouteRecordRaw[] = [
       meta: {
         requiresAuth: true,
         allowedRoles: ['admin', 'doc'],
-        name: 'Handsontable示例2'
+        name: 'Arrays of objects as data'
+      }
+    }, {
+      path: '/demo/handsontable3',
+      component: () => import('pages/handsontable/Demo3.vue'),
+      meta: {
+        requiresAuth: true,
+        allowedRoles: ['admin', 'doc'],
+        name: 'Use object prop as column'
+      }
+    }, {
+      path: '/demo/handsontable4',
+      component: () => import('pages/handsontable/Demo4.vue'),
+      meta: {
+        requiresAuth: true,
+        allowedRoles: ['admin', 'doc'],
+        name: 'Use data schema'
+      }
+    }, {
+      path: '/demo/handsontable5',
+      component: () => import('pages/handsontable/Demo5.vue'),
+      meta: {
+        requiresAuth: true,
+        allowedRoles: ['admin', 'doc'],
+        name: 'Function data source and schema'
       }
     }],
   },
