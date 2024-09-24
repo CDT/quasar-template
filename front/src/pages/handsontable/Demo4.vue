@@ -27,7 +27,6 @@ In a scenario where you start with an empty data source, you will need to provid
 </template>
 
 <script setup>
-import { defineComponent } from 'vue';
 import { HotTable } from '@handsontable/vue3';
 import { registerAllModules } from 'handsontable/registry';
 

@@ -58,6 +58,14 @@ const routes: RouteRecordRaw[] = [
         allowedRoles: ['admin', 'doc'],
         name: 'Function data source and schema'
       }
+    }, {
+      path: '/demo/handsontable6',
+      component: () => import('pages/handsontable/Demo6.vue'),
+      meta: {
+        requiresAuth: true,
+        allowedRoles: ['admin', 'doc'],
+        name: 'Set Data at Cell'
+      }
     }],
   },
   {

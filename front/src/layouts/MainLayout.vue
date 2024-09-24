@@ -125,6 +125,10 @@ const linksList: EssentialLinkProps[] = [
       title: 'Function data source and schema',
       icon: 'grid_view',
       link: '/demo/handsontable5'
+    }, {
+      title: 'Set Data at Cell',
+      icon: 'grid_view',
+      link: '/demo/handsontable6'
     }]
   }
 ]
