@@ -66,6 +66,14 @@ const routes: RouteRecordRaw[] = [
         allowedRoles: ['admin', 'doc'],
         name: 'Set Data at Cell'
       }
+    }, {
+      path: '/demo/handsontable7',
+      component: () => import('pages/handsontable/Demo7.vue'),
+      meta: {
+        requiresAuth: true,
+        allowedRoles: ['admin', 'doc'],
+        name: 'hotSettings and PersistentState'
+      }
     }],
   },
   {

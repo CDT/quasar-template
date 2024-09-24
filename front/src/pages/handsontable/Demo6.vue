@@ -1,7 +1,9 @@
 <template>
 
   <div class="q-mx-md q-my-md">
-    When using object data binding, Handsontable needs to know what data structure to create when adding a new row. If your data source contains at least one row, Handsontable will figure out the data structure based on the first row.
+    const hotInstance = ref(null)
+    <br />
+    hotInstance.value.hotInstance.setDataAtCell(0, 1, 'Ford')
   </div>
 
   <div class="q-mx-md q-my-md">

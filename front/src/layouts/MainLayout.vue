@@ -129,6 +129,10 @@ const linksList: EssentialLinkProps[] = [
       title: 'Set Data at Cell',
       icon: 'grid_view',
       link: '/demo/handsontable6'
+    }, {
+      title: 'hotSettings and PersistentState',
+      icon: 'grid_view',
+      link: '/demo/handsontable7'
     }]
   }
 ]
