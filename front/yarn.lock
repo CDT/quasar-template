@@ -3705,11 +3705,13 @@ qs@6.11.0:
 "quasar-project@file:.":
   version "0.0.1"
   dependencies:
+    "@handsontable/vue3" "^14.5.0"
     "@quasar/extras" "^1.16.4"
     axios "^1.7.2"
+    handsontable "^14.5.0"
     pinia "^2.1.7"
     quasar "^2.16.0"
-    quasar-project "file:C:/Users/C/AppData/Local/Yarn/Cache/v6/npm-quasar-project-0.0.1-8aa03c1e-2577-4f11-9ab8-854ecac5cb7a-1726304509626/node_modules/quasar-project"
+    quasar-project "file:C:/Users/C/AppData/Local/Yarn/Cache/v6/npm-quasar-project-0.0.1-71648b0f-b5be-4515-9e7b-d94d0f9cbd76-1727336750723/node_modules/quasar-project"
     vue "^3.4.18"
     vue-router "^4.0.12"
 

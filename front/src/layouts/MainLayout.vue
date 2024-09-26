@@ -134,6 +134,16 @@ const linksList: EssentialLinkProps[] = [
       icon: 'grid_view',
       link: '/demo/handsontable7'
     }]
+  },
+  {
+    title: '表格示例',
+    caption: '自带表格',
+    icon: 'grid_view',
+    children: [{
+      title: 'Demo1',
+      icon: 'grid_view',
+      link: '/demo/table1'
+    }]
   }
 ]
 

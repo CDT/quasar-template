@@ -24,7 +24,7 @@ const routes: RouteRecordRaw[] = [
       meta: {
         requiresAuth: true,
         allowedRoles: ['admin', 'doc'],
-        name: 'Arrays of arrays as data'
+        name: 'Handsontable示例 / Arrays of arrays as data'
       }
     }, {
       path: '/demo/handsontable2',
@@ -32,7 +32,7 @@ const routes: RouteRecordRaw[] = [
       meta: {
         requiresAuth: true,
         allowedRoles: ['admin', 'doc'],
-        name: 'Arrays of objects as data'
+        name: 'Handsontable示例 / Arrays of objects as data'
       }
     }, {
       path: '/demo/handsontable3',
@@ -40,7 +40,7 @@ const routes: RouteRecordRaw[] = [
       meta: {
         requiresAuth: true,
         allowedRoles: ['admin', 'doc'],
-        name: 'Use object prop as column'
+        name: 'Handsontable示例 / Use object prop as column'
       }
     }, {
       path: '/demo/handsontable4',
@@ -48,7 +48,7 @@ const routes: RouteRecordRaw[] = [
       meta: {
         requiresAuth: true,
         allowedRoles: ['admin', 'doc'],
-        name: 'Use data schema'
+        name: 'Handsontable示例 / Use data schema'
       }
     }, {
       path: '/demo/handsontable5',
@@ -56,7 +56,7 @@ const routes: RouteRecordRaw[] = [
       meta: {
         requiresAuth: true,
         allowedRoles: ['admin', 'doc'],
-        name: 'Function data source and schema'
+        name: 'Handsontable示例 / Function data source and schema'
       }
     }, {
       path: '/demo/handsontable6',
@@ -64,7 +64,7 @@ const routes: RouteRecordRaw[] = [
       meta: {
         requiresAuth: true,
         allowedRoles: ['admin', 'doc'],
-        name: 'Set Data at Cell'
+        name: 'Handsontable示例 / Set Data at Cell'
       }
     }, {
       path: '/demo/handsontable7',
@@ -72,9 +72,17 @@ const routes: RouteRecordRaw[] = [
       meta: {
         requiresAuth: true,
         allowedRoles: ['admin', 'doc'],
-        name: 'hotSettings and PersistentState'
+        name: 'Handsontable示例 / hotSettings and PersistentState'
       }
-    }],
+    }, {
+      path: '/demo/table1',
+      component: () => import('pages/table/Demo1.vue'),
+      meta: {
+        requiresAuth: true,
+        allowedRoles: ['admin', 'doc'],
+        name: '表格示例 / Demo1'
+      }
+    }]
   },
   {
     path: '/login',

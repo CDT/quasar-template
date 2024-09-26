@@ -11,7 +11,7 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import { HotTable } from '@handsontable/vue3';
 import { registerAllModules } from 'handsontable/registry';
 
