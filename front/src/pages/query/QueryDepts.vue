@@ -260,6 +260,7 @@ const deleteDepartment = (row: Dept) => {
   }).onOk(() => {
     // User clicked OK
     console.log('OK')
+    showNotification('不删除，只是一个示例', 'info')
   }).onCancel(() => {
     // User clicked Cancel
     console.log('Cancel')
@@ -271,6 +272,7 @@ const deleteDepartment = (row: Dept) => {
 
 const handleSave = () => {
   console.log('Save', selectedDepartment.value)
+  showNotification('不保存，只是一个示例', 'info')
   isEditDialogVisible.value = false
 }
 

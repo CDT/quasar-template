@@ -13,10 +13,17 @@ const routes: RouteRecordRaw[] = [
       }
     }, {
       path: '/query/depts',
-      component: () => import('pages/QueryDepts.vue'),
+      component: () => import('pages/query/QueryDepts.vue'),
       meta: {
         requiresAuth: true,
-        name: '科室查询'
+        name: '查科室'
+      }
+    }, {
+      path: '/query/patients',
+      component: () => import('pages/query/QueryPatients.vue'),
+      meta: {
+        requiresAuth: true,
+        name: '查患者'
       }
     }, {
       path: '/demo/handsontable1',

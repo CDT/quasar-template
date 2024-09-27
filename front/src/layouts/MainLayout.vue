@@ -10,6 +10,11 @@
           </router-link>
           / {{ $route.meta.name }}
         </q-toolbar-title>
+           
+        <q-btn flat round dense @click="toggleTheme" class="q-mr-md">
+          <q-icon :name="isDarkTheme ? 'dark_mode' : 'light_mode'" />
+          <q-tooltip>{{ isDarkTheme ? 'Switch to Light Theme' : 'Switch to Dark Theme' }}</q-tooltip>
+        </q-btn>
 
         <q-btn flat round dense>
           <q-avatar color="warning" text-color="white">
@@ -24,16 +29,15 @@
               </q-item>
             </q-list>
           </q-menu>
-        </q-btn>
+        </q-btn>     
       </q-toolbar>
     </q-header>
 
-    <q-drawer v-model="leftDrawerOpen" bordered>
+    <q-drawer v-model="leftDrawerOpen">
       <q-list>
         <q-item-label header>
           常用功能
         </q-item-label>
-
 
         <template v-for="link in filteredLinks" :key="link.title">
           <!-- 不带子菜单 -->
@@ -84,11 +88,15 @@
 import { ref, computed } from 'vue'
 import { EssentialLinkProps } from 'src/types'
 import { useAuthStore } from 'src/stores/auth'
-import { useRouter, useRoute } from 'vue-router'
+import { useRouter } from 'vue-router'
+import { useQuasar } from 'quasar'
 
 const authStore = useAuthStore()
 const router = useRouter()
-const route = useRoute()
+const isDarkTheme = ref(localStorage.getItem('isDarkTheme') === 'true')
+const $q = useQuasar()
+
+$q.dark.set(isDarkTheme.value)
 
 defineOptions({
   name: 'MainLayout'
@@ -96,10 +104,20 @@ defineOptions({
 
 const linksList: EssentialLinkProps[] = [
   {
-    title: '科室查询',
-    caption: '院内科室信息查询',
-    icon: 'apartment',
-    link: '/query/depts'
+    title: '常用查询',
+    caption: '常用查询',
+    icon: 'search',
+    children: [{
+      title: '患者查询',
+      caption: '患者信息查询',
+      icon: 'personal_injury',
+      link: '/query/patients'
+    },{
+      title: '科室查询',
+      caption: '院内科室信息查询',
+      icon: 'apartment',
+      link: '/query/depts'
+    }]
   },
   {
     title: 'Handsontable示例',
@@ -187,6 +205,12 @@ const toggleLeftDrawer = () => {
 const logout = () => {
   authStore.logout()
   router.push('/login')
+}
+
+const toggleTheme = () => {
+  isDarkTheme.value = !isDarkTheme.value
+  localStorage.setItem('isDarkTheme', isDarkTheme.value.toString())
+  $q.dark.set(isDarkTheme.value)
 }
 </script>
 >

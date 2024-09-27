@@ -1,6 +1,6 @@
 {
   "version": "0.2.0",
-  "configurations": [
+  "configurations": [    
     {
       "type": "node",
       "request": "launch",
@@ -11,6 +11,17 @@
       ],
       "console": "integratedTerminal",
       "program": "${workspaceFolder}\\back\\server.js"
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "runtimeExecutable": "nodemon",
+      "name": "back tests",
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
+      "console": "integratedTerminal",
+      "program": "${workspaceFolder}\\back\\tests\\test.js"
     },
     {
       "name": "front(edge)",
