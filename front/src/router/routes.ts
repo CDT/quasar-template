@@ -12,6 +12,13 @@ const routes: RouteRecordRaw[] = [
         name: '主页'
       }
     }, {
+      path: '/dashboard',
+      component: () => import('pages/Dashboard.vue'),
+      meta: {
+        requiresAuth: true,
+        name: '仪表盘示例'
+      }
+    }, {
       path: '/query/depts',
       component: () => import('pages/query/QueryDepts.vue'),
       meta: {

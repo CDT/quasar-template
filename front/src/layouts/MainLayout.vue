@@ -10,7 +10,7 @@
           </router-link>
           / {{ $route.meta.name }}
         </q-toolbar-title>
-           
+
         <q-btn flat round dense @click="toggleTheme" class="q-mr-md">
           <q-icon :name="isDarkTheme ? 'dark_mode' : 'light_mode'" />
           <q-tooltip>{{ isDarkTheme ? 'Switch to Light Theme' : 'Switch to Dark Theme' }}</q-tooltip>
@@ -29,7 +29,7 @@
               </q-item>
             </q-list>
           </q-menu>
-        </q-btn>     
+        </q-btn>
       </q-toolbar>
     </q-header>
 
@@ -118,8 +118,12 @@ const linksList: EssentialLinkProps[] = [
       icon: 'apartment',
       link: '/query/depts'
     }]
-  },
-  {
+  }, {
+    title: '仪表盘',
+    caption: '仪表盘示例',
+    icon: 'dashboard',
+    link: '/dashboard'
+  }, {
     title: 'Handsontable示例',
     caption: '基于Vue3的Handsontable示例',
     icon: 'grid_view',
