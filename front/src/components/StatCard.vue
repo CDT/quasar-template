@@ -5,9 +5,9 @@
         <div>
           <div class="text-h6">{{ title }}</div>
           <div class="text-h4 q-mt-sm">{{ content }}</div>
-          <div class="text-caption q-mt-xs">{{ caption }}</div>
+          <!-- <div class="q-mt-xs">{{ caption }}</div> -->
         </div>
-        <q-icon :name="icon" size="lg" />
+        <q-icon :name="icon" size="xl" />
       </div>
     </q-card-section>
   </q-card>

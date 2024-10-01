@@ -62,10 +62,10 @@ import StatCard from 'src/components/StatCard.vue'
 
 const leftDrawerOpen = ref(false)
 const cardData = [
-  { title: 'Total Users', content: '10', icon: 'warning', caption: 'test11111' },
-  { title: 'Total Sales', content: '5', icon: 'warning', caption: 'test11111' },
-  { title: 'Total Projects', content: '3', icon: 'warning', caption: 'test11111' },
-  { title: 'Total Revenue', content: '$500', icon: 'warning', caption: 'test11111' }
+  { title: 'Total Users', content: '10', icon: 'person', caption: 'total number of users' },
+  { title: 'Total Sales', content: '5', icon: 'shopping_cart', caption: 'total number of sales' },
+  { title: 'Total Projects', content: '3', icon: 'work', caption: 'total number of projects' },
+  { title: 'Total Revenue', content: '$500', icon: 'attach_money', caption: 'total amount of revenue' }
 ]
 
 const recentActivities = ref([
