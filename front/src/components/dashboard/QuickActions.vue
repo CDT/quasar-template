@@ -1,12 +1,7 @@
 <template>
-<q-card>
-  <q-card-section>
-    <div class="text-h6">Quick Actions</div>
-    <q-list>
-      <action-item v-for="(action, index) in actions" :key="index" v-bind="action" />
-    </q-list>
-  </q-card-section>
-</q-card>
+<q-list>
+  <action-item v-for="(action, index) in actions" :key="index" v-bind="action" />
+</q-list>
 </template>
 
 <script setup lang="ts">

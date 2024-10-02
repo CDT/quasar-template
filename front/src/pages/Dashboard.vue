@@ -11,12 +11,53 @@
 
   <div class="row q-col-gutter-md q-mt-md">
     <div class="col-12 col-lg-8">
-      <recent-activities :recentActivities="recentActivities" />
+      <q-card>
+        <q-card-section>
+          <div class="text-h6">Recent Activity</div>
+          <recent-activities :recentActivities="recentActivities" />
+        </q-card-section>
+      </q-card>
     </div>
     <div class="col-12 col-lg-4">
-      <quick-actions />
+      <q-card>
+        <q-card-section>
+          <div class="text-h6">Quick Actions</div>
+          <quick-actions />
+        </q-card-section>
+      </q-card>
     </div>
   </div>
+
+  <div class="row q-col-gutter-md q-mt-md">
+    <div class="col-12 col-lg-6">
+      <q-card>
+        <q-card-section>
+          <div class="text-h6">Pie Chart</div>
+          <pie-chart />
+        </q-card-section>
+      </q-card>
+    </div>
+    <div class="col-12 col-lg-6">
+      <q-card>
+        <q-card-section>
+          <div class="text-h6">Line Chart</div>
+          <line-chart />
+        </q-card-section>
+      </q-card>
+    </div>
+  </div>
+
+  <div class="row q-col-gutter-md q-mt-md">
+    <div class="col-12">
+      <q-card>
+        <q-card-section>
+          <div class="text-h6">Bar Chart</div>
+          <bar-chart />
+        </q-card-section>
+      </q-card>
+    </div>
+  </div>
+
 </q-page>
 </template>
 
@@ -25,6 +66,9 @@ import { ref } from 'vue'
 import StatCard from 'src/components/dashboard/StatCard.vue'
 import RecentActivities from 'src/components/dashboard/RecentActivities.vue'
 import QuickActions from 'src/components/dashboard/QuickActions.vue'
+import BarChart from 'src/components/charts/BarChart.vue'
+import PieChart from 'src/components/charts/PieChart.vue'
+import LineChart from 'src/components/charts/LineChart.vue'
 
 const icon_colors = ['#FF5733', '#33FF57', '#3357FF', '#FF33A1']
 const cardData = [
