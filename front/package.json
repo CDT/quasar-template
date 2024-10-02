@@ -14,11 +14,13 @@
     "@handsontable/vue3": "^14.5.0",
     "@quasar/extras": "^1.16.4",
     "axios": "^1.7.2",
+    "chart.js": "^4.4.4",
     "handsontable": "^14.5.0",
     "pinia": "^2.1.7",
     "quasar": "^2.16.0",
     "quasar-project": "file:",
     "vue": "^3.4.18",
+    "vue-chartjs": "^5.3.1",
     "vue-router": "^4.0.12"
   },
   "devDependencies": {

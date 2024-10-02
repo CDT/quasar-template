@@ -1,56 +1,20 @@
 <template>
 <q-page padding>
+
+  <!-- Four stat cards-->
   <div class="row q-col-gutter-md">
     <div class="col-12 col-md-6 col-lg-3" v-for="(datum, i) in cardData" :key="i">
-      <stat-card :title="datum.title" :content="datum.content" :icon="datum.icon" :caption="datum.caption" />
+      <stat-card :title="datum.title" :content="datum.content"
+       :icon="datum.icon" :caption="datum.caption" :icon_color="datum.icon_color" />
     </div>
   </div>
 
   <div class="row q-col-gutter-md q-mt-md">
     <div class="col-12 col-lg-8">
-      <q-card>
-        <q-card-section>
-          <div class="text-h6">Recent Activity</div>
-          <q-list>
-            <q-item v-for="(activity, index) in recentActivities" :key="index">
-              <q-item-section avatar>
-                <q-icon :name="activity.icon" :color="activity.color" />
-              </q-item-section>
-              <q-item-section>
-                <q-item-label>{{ activity.text }}</q-item-label>
-                <q-item-label caption>{{ activity.time }}</q-item-label>
-              </q-item-section>
-            </q-item>
-          </q-list>
-        </q-card-section>
-      </q-card>
+      <recent-activities :recentActivities="recentActivities" />
     </div>
     <div class="col-12 col-lg-4">
-      <q-card>
-        <q-card-section>
-          <div class="text-h6">Quick Actions</div>
-          <q-list>
-            <q-item clickable v-ripple>
-              <q-item-section avatar>
-                <q-icon name="add" color="primary" />
-              </q-item-section>
-              <q-item-section>New Project</q-item-section>
-            </q-item>
-            <q-item clickable v-ripple>
-              <q-item-section avatar>
-                <q-icon name="mail" color="secondary" />
-              </q-item-section>
-              <q-item-section>Send Message</q-item-section>
-            </q-item>
-            <q-item clickable v-ripple>
-              <q-item-section avatar>
-                <q-icon name="backup" color="warning" />
-              </q-item-section>
-              <q-item-section>Backup Data</q-item-section>
-            </q-item>
-          </q-list>
-        </q-card-section>
-      </q-card>
+      <quick-actions />
     </div>
   </div>
 </q-page>
@@ -58,14 +22,16 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import StatCard from 'src/components/StatCard.vue'
+import StatCard from 'src/components/dashboard/StatCard.vue'
+import RecentActivities from 'src/components/dashboard/RecentActivities.vue'
+import QuickActions from 'src/components/dashboard/QuickActions.vue'
 
-const leftDrawerOpen = ref(false)
+const icon_colors = ['#FF5733', '#33FF57', '#3357FF', '#FF33A1']
 const cardData = [
-  { title: 'Total Users', content: '10', icon: 'person', caption: 'total number of users' },
-  { title: 'Total Sales', content: '5', icon: 'shopping_cart', caption: 'total number of sales' },
-  { title: 'Total Projects', content: '3', icon: 'work', caption: 'total number of projects' },
-  { title: 'Total Revenue', content: '$500', icon: 'attach_money', caption: 'total amount of revenue' }
+  { title: 'Total Users', content: '10', icon: 'person', caption: 'total number of users', icon_color: icon_colors[0] },
+  { title: 'Total Sales', content: '5', icon: 'shopping_cart', caption: 'total number of sales', icon_color: icon_colors[1] },
+  { title: 'Total Projects', content: '3', icon: 'work', caption: 'total number of projects', icon_color: icon_colors[2] },
+  { title: 'Total Revenue', content: '$500', icon: 'attach_money', caption: 'total amount of revenue', icon_color: icon_colors[3] }
 ]
 
 const recentActivities = ref([
@@ -74,8 +40,4 @@ const recentActivities = ref([
   { icon: 'update', color: 'secondary', text: 'Project status updated', time: '1 hour ago' },
   { icon: 'error', color: 'negative', text: 'System alert received', time: '2 hours ago' },
 ])
-
-const toggleLeftDrawer = () => {
-  leftDrawerOpen.value = !leftDrawerOpen.value
-}
 </script>
