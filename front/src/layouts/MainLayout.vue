@@ -13,7 +13,15 @@
 
         <q-btn flat round dense @click="toggleTheme" class="q-mr-md">
           <q-icon :name="isDarkTheme ? 'dark_mode' : 'light_mode'" />
-          <q-tooltip>{{ isDarkTheme ? 'Switch to Light Theme' : 'Switch to Dark Theme' }}</q-tooltip>
+          <q-tooltip>{{ isDarkTheme ? '切换到浅色' : '切换到暗色' }}</q-tooltip>
+        </q-btn>
+
+        <q-btn flat round dense class="q-mr-md">
+          <q-icon name="message" />
+          <q-tooltip>消息</q-tooltip>
+          <q-menu>
+            <message-list :messages="messages" />
+          </q-menu>
         </q-btn>
 
         <q-btn flat round dense>
@@ -86,15 +94,19 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import { EssentialLinkProps } from 'src/types'
+import { EssentialLinkProps, Message } from 'src/types'
 import { useAuthStore } from 'src/stores/auth'
 import { useRouter } from 'vue-router'
 import { useQuasar } from 'quasar'
+import MessageList from 'src/components/MessageList.vue'
+import { demoMessages } from 'src/utils/demo_data'
 
 const authStore = useAuthStore()
 const router = useRouter()
 const isDarkTheme = ref(localStorage.getItem('isDarkTheme') === 'true')
 const $q = useQuasar()
+
+const messages = ref<Message[]>(demoMessages)
 
 $q.dark.set(isDarkTheme.value)
 

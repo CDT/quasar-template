@@ -44,3 +44,12 @@ export interface EssentialLinkProps {
     icon?: string,
     }[]
 }
+
+export interface Message {
+  id: number
+  icon: string
+  color: string
+  type: string
+  content: string
+  timestamp: string
+}
