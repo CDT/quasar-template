@@ -256,7 +256,6 @@ const generateSampleData = () => {
 // 导出Excel
 const exportToExcel = () => {
   try {
-    // 创建工作簿
     const wb = XLSX.utils.book_new()
     
     // 转换数据格式
@@ -274,6 +273,69 @@ const exportToExcel = () => {
     
     // 创建工作表
     const ws = XLSX.utils.aoa_to_sheet(excelData)
+    
+    // 设置列宽
+    const colWidths = [
+      { wch: 12 }, // 部门
+      { wch: 8 },  // 季度
+      { wch: 15 }, // 销售额
+      { wch: 12 }, // 同比增长
+      { wch: 12 }, // 完成率
+      { wch: 15 }, // 总成本
+      { wch: 15 }, // 人工成本
+      { wch: 15 }, // 材料成本
+      { wch: 12 }, // 毛利率
+      { wch: 15 }  // 净利润
+    ]
+    ws['!cols'] = colWidths
+
+    // 设置单元格样式
+    const range = XLSX.utils.decode_range(ws['!ref'])
+    for (let R = range.s.r; R <= range.e.r; R++) {
+      for (let C = range.s.c; C <= range.e.c; C++) {
+        const cell_address = XLSX.utils.encode_cell({ r: R, c: C })
+        if (!ws[cell_address]) continue
+        
+        // 基础样式：Arial字体，边框
+        ws[cell_address].s = {
+          font: { name: "Arial", sz: 11 },
+          border: {
+            top: { style: 'thin' },
+            bottom: { style: 'thin' },
+            left: { style: 'thin' },
+            right: { style: 'thin' }
+          },
+          alignment: { horizontal: 'center', vertical: 'center' }
+        }
+
+        // 表头样式
+        if (R === 0) {
+          ws[cell_address].s.fill = { 
+            fgColor: { rgb: "F5F5F5" },
+            patternType: 'solid'
+          }
+          ws[cell_address].s.font.bold = true
+        }
+        
+        // 小计行样式
+        const isSubtotalRow = tableData.value[R - 1]?.isSubtotal
+        if (isSubtotalRow) {
+          ws[cell_address].s.fill = { 
+            fgColor: { rgb: "F8F8F8" },
+            patternType: 'solid'
+          }
+        }
+        
+        // 总计行样式
+        if (R === range.e.r) {
+          ws[cell_address].s.fill = { 
+            fgColor: { rgb: "EEF2FF" },
+            patternType: 'solid'
+          }
+          ws[cell_address].s.font.bold = true
+        }
+      }
+    }
     
     // 添加工作表到工作簿
     XLSX.utils.book_append_sheet(wb, ws, '报表')
@@ -318,35 +380,51 @@ onMounted(() => {
 
 .report-table th,
 .report-table td {
-  border: 1px solid #ddd;
+  border: 1px solid var(--q-border);
   padding: 8px;
   text-align: center;
 }
 
 .report-table th {
-  background-color: #f5f5f5;
+  background-color: var(--q-table-header-bg);
   font-weight: bold;
 }
 
 .fixed-column {
   position: sticky;
   left: 0;
-  background-color: #fff;
+  background-color: var(--q-table-bg);
   z-index: 1;
 }
 
 .summary-row {
-  background-color: #f8f8f8;
+  background-color: var(--q-table-hover-bg);
 }
 
 .total-row {
-  background-color: #eef2ff;
+  background-color: var(--q-primary-fade);
   font-weight: bold;
 }
 
 /* 确保固定列的表头始终在最上层 */
 thead .fixed-column {
-  background-color: #f5f5f5;
+  background-color: var(--q-table-header-bg);
   z-index: 2;
+}
+
+:root {
+  --q-border: #ddd;
+  --q-table-bg: #fff;
+  --q-table-header-bg: #f5f5f5;
+  --q-table-hover-bg: #f8f8f8;
+  --q-primary-fade: #eef2ff;
+}
+
+.body--dark {
+  --q-border: #404040;
+  --q-table-bg: #121212;
+  --q-table-header-bg: #1d1d1d;
+  --q-table-hover-bg: #242424;
+  --q-primary-fade: #1a1a2f;
 }
 </style>
