@@ -96,6 +96,14 @@ const routes: RouteRecordRaw[] = [
         allowedRoles: ['admin', 'doc'],
         name: '表格示例 / Demo1'
       }
+    }, {
+      path: '/reportsim',
+      component: () => import('pages/ReportSim.vue'),
+      meta: {
+        requiresAuth: true,
+        allowedRoles: ['admin', 'doc'],
+        name: '仿报表'
+      }
     }]
   },
   {

@@ -178,6 +178,12 @@ const linksList: EssentialLinkProps[] = [
       icon: 'grid_view',
       link: '/demo/table1'
     }]
+  },
+  {
+    title: '仿报表',
+    caption: '模仿报表',
+    icon: 'grid_view',
+    link: '/reportsim'
   }
 ]
 
