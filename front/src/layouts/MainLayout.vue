@@ -135,39 +135,6 @@ const linksList: EssentialLinkProps[] = [
     caption: '仪表盘示例',
     icon: 'dashboard',
     link: '/dashboard'
-  }, {
-    title: 'Handsontable示例',
-    caption: '基于Vue3的Handsontable示例',
-    icon: 'grid_view',
-    children: [{
-      title: 'Arrays of arrays as data',
-      icon: 'grid_view',
-      link: '/demo/handsontable1'
-    }, {
-      title: 'Arrays of objects as data',
-      icon: 'grid_view',
-      link: '/demo/handsontable2'
-    }, {
-      title: 'Use object prop as column',
-      icon: 'grid_view',
-      link: '/demo/handsontable3'
-    }, {
-      title: 'Use data schema',
-      icon: 'grid_view',
-      link: '/demo/handsontable4'
-    }, {
-      title: 'Function data source and schema',
-      icon: 'grid_view',
-      link: '/demo/handsontable5'
-    }, {
-      title: 'Set Data at Cell',
-      icon: 'grid_view',
-      link: '/demo/handsontable6'
-    }, {
-      title: 'hotSettings and PersistentState',
-      icon: 'grid_view',
-      link: '/demo/handsontable7'
-    }]
   },
   {
     title: '表格示例',
@@ -181,9 +148,17 @@ const linksList: EssentialLinkProps[] = [
   },
   {
     title: '仿报表',
-    caption: '模仿报表',
+    caption: '仿报表',
     icon: 'grid_view',
-    link: '/reportsim'
+    children: [{
+      title: 'Demo1',
+      icon: 'grid_view',
+      link: '/reportsim/demo1'
+    }, {
+      title: 'Demo2',
+      icon: 'grid_view',
+      link: '/reportsim/demo2'
+    }]
   }
 ]
 
