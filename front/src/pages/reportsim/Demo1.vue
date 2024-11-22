@@ -337,7 +337,7 @@ const exportToExcel = () => {
       }
     }
     
-    // 添加工作表到工作簿
+    // 加工作表到工作簿
     XLSX.utils.book_append_sheet(wb, ws, '报表')
     
     // 导出文件
@@ -355,7 +355,6 @@ const exportToExcel = () => {
   }
 }
 
-// 生命周期钩子
 onMounted(() => {
   generateReport()
 })
@@ -376,55 +375,84 @@ onMounted(() => {
   width: 100%;
   border-collapse: collapse;
   font-size: 14px;
+  border: 1px solid #dcdfe6;
 }
 
 .report-table th,
 .report-table td {
-  border: 1px solid var(--q-border);
   padding: 8px;
   text-align: center;
-}
-
-.report-table th {
-  background-color: var(--q-table-header-bg);
-  font-weight: bold;
+  border: 1px solid #dcdfe6;
 }
 
 .fixed-column {
   position: sticky;
   left: 0;
-  background-color: var(--q-table-bg);
   z-index: 1;
+  background-color: #ffffff;
 }
 
 .summary-row {
-  background-color: var(--q-table-hover-bg);
+  background-color: #f5f7fa;
+}
+
+.summary-row .fixed-column {
+  background-color: #f5f7fa;
 }
 
 .total-row {
-  background-color: var(--q-primary-fade);
   font-weight: bold;
+  background-color: #f5f7fa;
 }
 
-/* 确保固定列的表头始终在最上层 */
+thead th {
+  background-color: #f5f7fa;
+}
+
 thead .fixed-column {
-  background-color: var(--q-table-header-bg);
   z-index: 2;
+  background-color: #f5f7fa;
 }
 
-:root {
-  --q-border: #ddd;
-  --q-table-bg: #fff;
-  --q-table-header-bg: #f5f5f5;
-  --q-table-hover-bg: #f8f8f8;
-  --q-primary-fade: #eef2ff;
+.report-table tbody tr:hover {
+  background-color: #f5f7fa;
 }
 
-.body--dark {
-  --q-border: #404040;
-  --q-table-bg: #121212;
-  --q-table-header-bg: #1d1d1d;
-  --q-table-hover-bg: #242424;
-  --q-primary-fade: #1a1a2f;
+/* Dark theme styles */
+.body--dark .report-table {
+  border-color: #4c4c4c;
+}
+
+.body--dark .report-table th,
+.body--dark .report-table td {
+  border-color: #4c4c4c;
+}
+
+.body--dark .fixed-column {
+  background-color: #1d1d1d;
+}
+
+.body--dark thead th {
+  background-color: #2d2d2d;
+}
+
+.body--dark thead .fixed-column {
+  background-color: #2d2d2d;
+}
+
+.body--dark .summary-row {
+  background-color: #2d2d2d;
+}
+
+.body--dark .total-row {
+  background-color: #2d2d2d;
+}
+
+.body--dark .report-table tbody tr:hover {
+  background-color: #2d2d2d;
+}
+
+.body--dark .summary-row .fixed-column {
+  background-color: #2d2d2d;
 }
 </style>
