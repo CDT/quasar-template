@@ -17,6 +17,7 @@ module.exports = function(app) {
   // 其他
   app.get('/api/options', miscController.getOptions)
   app.get('/api/depts', miscController.getDepts)
+  app.post('/api/exportToExcel', miscController.exportToExcel)
 
   // Add this at the end of all your routes
   app.use('*', (_, res) => {
