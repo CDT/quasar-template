@@ -97,7 +97,7 @@ const getPagedResult = (sql, params) => {
 exports.getPagedResult = getPagedResult
 
 exports.query = (sql, params) => {
-  if (params.page) {
+  if (params?.page) {
     return getPagedResult(sql, params)
   }
   return execute(sql, params)

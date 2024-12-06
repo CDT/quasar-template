@@ -13,7 +13,7 @@
   "dependencies": {
     "@handsontable/vue3": "^14.5.0",
     "@quasar/extras": "^1.16.4",
-    "axios": "^1.7.2",
+    "axios": "^1.7.3",
     "chart.js": "^4.4.4",
     "handsontable": "^14.5.0",
     "pinia": "^2.1.7",
