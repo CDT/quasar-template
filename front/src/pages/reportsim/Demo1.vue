@@ -91,15 +91,40 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, reactive, onMounted, computed } from 'vue'
 import { useQuasar } from 'quasar'
-import * as XLSX from 'xlsx'
+import { api } from 'src/boot/axios'
+import { showErrorRespNotification } from 'src/utils/notifications';
 
 const $q = useQuasar()
 
+// Type definitions
+interface Cell {
+  value: string | number
+  type?: 'text' | 'percentage' | 'currency'
+  className?: string
+  rowSpan?: number
+  colSpan?: number
+}
+
+interface TableRow {
+  isSubtotal?: boolean
+  cells: Cell[]
+}
+
+interface HeaderCell {
+  title: string
+  rowSpan?: number
+  colSpan?: number
+  className?: string
+}
+
 // 状态定义
-const filters = reactive({
+const filters = reactive<{
+  year: string
+  department: string
+}>({
   year: '2024',
   department: '全部'
 })
@@ -108,7 +133,7 @@ const yearOptions = ['2024', '2023', '2022']
 const departmentOptions = ['全部', '销售部', '生产部', '研发部']
 
 // 表格相关数据
-const tableHeaders = ref([
+const tableHeaders = ref<HeaderCell[][]>([
   [
     { title: '部门', rowSpan: 2, colSpan: 1, className: 'fixed-column' },
     { title: '季度', rowSpan: 2, colSpan: 1 },
@@ -129,11 +154,11 @@ const tableHeaders = ref([
   ]
 ])
 
-const tableData = ref([])
-const totalRow = ref([])
+const tableData = ref<TableRow[]>([])
+const totalRow = ref<Cell[]>([])
 
 // 格式化单元格数值
-const formatCellValue = (cell) => {
+const formatCellValue = (cell: Cell): string => {
   if (!cell.value && cell.value !== 0) return ''
   
   if (cell.type === 'percentage') {
@@ -168,10 +193,7 @@ const generateReport = async () => {
     $q.loading.hide()
   } catch (error) {
     $q.loading.hide()
-    $q.notify({
-      type: 'negative',
-      message: '生成报表失败：' + error.message
-    })
+    showErrorRespNotification(error)
   }
 }
 
@@ -254,177 +276,158 @@ const generateSampleData = () => {
 }
 
 // 导出Excel
-const exportToExcel = () => {
+const exportToExcel = async () => {
   try {
-    const wb = XLSX.utils.book_new()
-    
-    // 转换数据格式
-    const excelData = [
-      // 表头
-      ['部门', '季度', '销售额', '同比增长', '完成率', '总成本', '人工成本', 
-       '材料成本', '毛利率', '净利润'],
-      // 数据行
-      ...tableData.value.map(row => 
-        row.cells.map(cell => cell.value)
-      ),
-      // 总计行
-      totalRow.value.map(cell => cell.value)
-    ]
-    
-    // 创建工作表
-    const ws = XLSX.utils.aoa_to_sheet(excelData)
-    
-    // 设置列宽
-    const colWidths = [
-      { wch: 12 }, // 部门
-      { wch: 8 },  // 季度
-      { wch: 15 }, // 销售额
-      { wch: 12 }, // 同比增长
-      { wch: 12 }, // 完成率
-      { wch: 15 }, // 总成本
-      { wch: 15 }, // 人工成本
-      { wch: 15 }, // 材料成本
-      { wch: 12 }, // 毛利率
-      { wch: 15 }  // 净利润
-    ]
-    ws['!cols'] = colWidths
+    $q.loading.show({
+      message: '正在导出...'
+    })
 
-    // 设置单元格样式
-    const range = XLSX.utils.decode_range(ws['!ref'])
-    for (let R = range.s.r; R <= range.e.r; R++) {
-      for (let C = range.s.c; C <= range.e.c; C++) {
-        const cell_address = XLSX.utils.encode_cell({ r: R, c: C })
-        if (!ws[cell_address]) continue
-        
-        // 基础样式：Arial字体，边框
-        ws[cell_address].s = {
-          font: { name: "Arial", sz: 11 },
-          border: {
-            top: { style: 'thin' },
-            bottom: { style: 'thin' },
-            left: { style: 'thin' },
-            right: { style: 'thin' }
-          },
-          alignment: { horizontal: 'center', vertical: 'center' }
-        }
-
-        // 表头样式
-        if (R === 0) {
-          ws[cell_address].s.fill = { 
-            fgColor: { rgb: "F5F5F5" },
-            patternType: 'solid'
-          }
-          ws[cell_address].s.font.bold = true
-        }
-        
-        // 小计行样式
-        const isSubtotalRow = tableData.value[R - 1]?.isSubtotal
-        if (isSubtotalRow) {
-          ws[cell_address].s.fill = { 
-            fgColor: { rgb: "F8F8F8" },
-            patternType: 'solid'
-          }
-        }
-        
-        // 总计行样式
-        if (R === range.e.r) {
-          ws[cell_address].s.fill = { 
-            fgColor: { rgb: "EEF2FF" },
-            patternType: 'solid'
-          }
-          ws[cell_address].s.font.bold = true
-        }
-      }
+    const exportData = {
+      year: filters.year,
+      department: filters.department,
+      tableData: tableData.value,
+      totalRow: totalRow.value
     }
-    
-    // 添加工作表到工作簿
-    XLSX.utils.book_append_sheet(wb, ws, '报表')
-    
-    // 导出文件
-    XLSX.writeFile(wb, `报表_${filters.year}_${filters.department}.xlsx`)
-    
+
+    // Using api instead of fetch
+    const response = await api.post('/exportToExcel', exportData, {
+      responseType: 'blob' // Important for handling binary data
+    })
+
+    // Create download link
+    const blob = new Blob([response.data], { 
+      type: response.headers['content-type'] 
+    })
+    const url = window.URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = `报表_${filters.year}_${filters.department}.xlsx`
+    document.body.appendChild(a)
+    a.click()
+    window.URL.revokeObjectURL(url)
+    document.body.removeChild(a)
+
+    $q.loading.hide()
     $q.notify({
       type: 'positive',
       message: '导出成功'
     })
   } catch (error) {
-    $q.notify({
-      type: 'negative',
-      message: '导出失败：' + error.message
-    })
+    $q.loading.hide()
+    showErrorRespNotification(error)
   }
 }
 
-// 生命周期钩子
 onMounted(() => {
   generateReport()
 })
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+// Variables
+$border-color: #dcdfe6;
+$hover-bg: #f5f7fa;
+$dark-border: #4c4c4c;
+$dark-bg: #1d1d1d;
+$dark-hover: #2d2d2d;
+
 .complex-report {
   width: 100%;
   overflow-x: auto;
 }
 
-.report-table-wrapper {
-  overflow-x: auto;
-  position: relative;
-}
-
 .report-table {
+  &-wrapper {
+    overflow-x: auto;
+    position: relative;
+  }
+
   width: 100%;
   border-collapse: collapse;
   font-size: 14px;
+  border: 1px solid $border-color;
+
+  th, td {
+    padding: 8px;
+    text-align: center;
+    border: 1px solid $border-color;
+  }
+
+  thead {
+    th {
+      background-color: $hover-bg;
+    }
+
+    .fixed-column {
+      z-index: 2;
+      background-color: $hover-bg;
+    }
+  }
+
+  tbody tr:hover {
+    background-color: $hover-bg;
+  }
+    
+  .fixed-column {
+    position: sticky;
+    left: 0;
+    z-index: 1;
+    background-color: #ffffff;
+  }
+
+  .summary-row {
+    background-color: $hover-bg;
+
+    .fixed-column {
+      background-color: $hover-bg;
+    }
+  }
+
+  .total-row {
+    font-weight: bold;
+    background-color: $hover-bg;
+  }
 }
 
-.report-table th,
-.report-table td {
-  border: 1px solid var(--q-border);
-  padding: 8px;
-  text-align: center;
-}
-
-.report-table th {
-  background-color: var(--q-table-header-bg);
-  font-weight: bold;
-}
-
-.fixed-column {
-  position: sticky;
-  left: 0;
-  background-color: var(--q-table-bg);
-  z-index: 1;
-}
-
-.summary-row {
-  background-color: var(--q-table-hover-bg);
-}
-
-.total-row {
-  background-color: var(--q-primary-fade);
-  font-weight: bold;
-}
-
-/* 确保固定列的表头始终在最上层 */
-thead .fixed-column {
-  background-color: var(--q-table-header-bg);
-  z-index: 2;
-}
-
-:root {
-  --q-border: #ddd;
-  --q-table-bg: #fff;
-  --q-table-header-bg: #f5f5f5;
-  --q-table-hover-bg: #f8f8f8;
-  --q-primary-fade: #eef2ff;
-}
-
+// Dark theme
 .body--dark {
-  --q-border: #404040;
-  --q-table-bg: #121212;
-  --q-table-header-bg: #1d1d1d;
-  --q-table-hover-bg: #242424;
-  --q-primary-fade: #1a1a2f;
+  .report-table {
+    border-color: $dark-border;
+
+    th, td {
+      border-color: $dark-border;
+    }
+
+    thead {
+      th {
+        background-color: $dark-hover;
+      }
+
+      .fixed-column {
+        background-color: $dark-hover;
+      }
+    }
+
+    tbody tr:hover {
+      background-color: $dark-hover;
+    }
+      
+    .fixed-column {
+      background-color: $dark-bg;
+    }
+
+    .summary-row {
+      background-color: $dark-hover;
+
+      .fixed-column {
+        background-color: $dark-hover;
+      }
+    }
+
+    .total-row {
+      background-color: $dark-hover;
+    }
+  }
+
 }
 </style>
